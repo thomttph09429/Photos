@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "414273881219",
+    "firebase_url": "https://appchat-2f812-default-rtdb.firebaseio.com",
+    "project_id": "appchat-2f812",
+    "storage_bucket": "appchat-2f812.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414273881219:android:91af6a3b92d1bce4e487b6",
+        "android_client_info": {
+          "package_name": "com.poly.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414273881219-qurg5h2cp2n5689jkjriaf8ltmk88r28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmSWb_Sie8gymIF20pUlEqqDMmJWT_PQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414273881219-qurg5h2cp2n5689jkjriaf8ltmk88r28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414273881219:android:d193380583efa6d7e487b6",
+        "android_client_info": {
+          "package_name": "com.poly.photos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414273881219-qurg5h2cp2n5689jkjriaf8ltmk88r28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmSWb_Sie8gymIF20pUlEqqDMmJWT_PQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414273881219-qurg5h2cp2n5689jkjriaf8ltmk88r28.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
