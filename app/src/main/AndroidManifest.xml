@@ -11,10 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Photos">
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MyAccountActivity" />
+        <activity android:name=".view.activity.LoginActivity" />
+
+        <activity
+            android:name=".view.activity.MyAccountActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".view.activity.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

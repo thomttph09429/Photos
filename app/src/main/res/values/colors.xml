@@ -9,5 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
     <color name="pinkpink">#8B0A50</color>
+    <color name="pink_100">#F4DEEA</color>
+    <color name="pink_200">#F199C9</color>
+    <color name="clear">#EDEDED</color>
+    <color name="color_dialog">#00ffffff</color>
 
 </resources>

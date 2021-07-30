@@ -1,7 +1,6 @@
-package com.poly.photos;
+package com.poly.photos.view.dialog;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -9,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,16 +16,14 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.poly.photos.R;
 
-public class ResetPwDialog extends Dialog implements View.OnClickListener {
+public class ForgotPwDialog extends Dialog implements View.OnClickListener {
+    public EditText edtEmail;
+    public Button btnOk, btnCancel;
     private final Activity context;
-    EditText edtNewPw;
-    Button btnOk, btnCancel;
-    FirebaseUser user;
-    FirebaseAuth auth;
 
-    public ResetPwDialog(Context context) {
+    public ForgotPwDialog(Context context) {
         super(context);
         this.context = (Activity) context;
     }
@@ -33,15 +31,14 @@ public class ResetPwDialog extends Dialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_reset_pw);
-        edtNewPw = findViewById(R.id.edt_new_pw);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.dialog_forgot_pw);
+        edtEmail = findViewById(R.id.edt_email);
         btnOk = findViewById(R.id.btn_ok);
         btnCancel = findViewById(R.id.btn_cancel);
         btnOk.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
     }
 
     @Override
@@ -51,28 +48,31 @@ public class ResetPwDialog extends Dialog implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.btn_ok:
-                String newPw = edtNewPw.getText().toString().trim();
+                String email = edtEmail.getText().toString().trim();
 
-                if (TextUtils.isEmpty(newPw)) {
-                    edtNewPw.setError("Can not be empty.");
+                if (TextUtils.isEmpty(email)) {
+                    edtEmail.setError("Can not be empty.");
                 } else {
-                    user.updatePassword(newPw).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(getContext(), "Password reset successfully.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Reset link sent to your email", Toast.LENGTH_LONG).show();
                             dismiss();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), "Password reset failed.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Error! Rest link is not sent", Toast.LENGTH_LONG).show();
 
                         }
                     });
+
                 }
             default:
                 break;
 
         }
+
+
     }
 }

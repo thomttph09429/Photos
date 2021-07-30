@@ -5,14 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".MyAccountActivity">
+    tools:context=".view.activity.MyAccountActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+
+        app:titleTextColor="@android:color/white">
+    </androidx.appcompat.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        android:orientation="vertical"
+        >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/hero_new_extrabold"
         android:text="Your Profile"
         android:textSize="28sp" />
@@ -98,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@drawable/button_click_circle"
+        android:background="@drawable/button_circle"
         android:text="Logout" />
 
     <Button
@@ -106,7 +122,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_click_circle"
+        android:background="@drawable/button_circle"
         android:text="Reset password" />
 
     <LinearLayout
@@ -133,5 +149,6 @@
             android:text="Verify now"
             android:textColor="@color/red"
             android:visibility="gone" />
+    </LinearLayout>
     </LinearLayout>
 </LinearLayout>

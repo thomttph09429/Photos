@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".RegisterActivity">
+    tools:context=".view.activity.RegisterActivity">
 
     <EditText
         android:layout_marginTop="80dp"
@@ -39,7 +39,7 @@
         android:id="@+id/btn_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_click_circle"
+        android:background="@drawable/button_circle"
         android:text="Register" />
 
 

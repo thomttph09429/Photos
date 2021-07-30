@@ -1,10 +1,9 @@
-package com.poly.photos;
+package com.poly.photos.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.poly.photos.MainActivity;
+import com.poly.photos.R;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,7 +106,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
                         Toast.makeText(RegisterActivity.this, "User create", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), MyAccountActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
 
                     } else {
                         Log.e("Reristor", "create  failse" + task.getException().getMessage());
@@ -117,7 +119,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         });
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), MyAccountActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
 
         }
     }

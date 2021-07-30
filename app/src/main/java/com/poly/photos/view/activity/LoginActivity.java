@@ -1,4 +1,4 @@
-package com.poly.photos;
+package com.poly.photos.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.poly.photos.MainActivity;
+import com.poly.photos.R;
+import com.poly.photos.view.dialog.ForgotPwDialog;
 
 public class LoginActivity extends AppCompatActivity {
     EditText edtPass, edtEmail;
@@ -35,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         btnForgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ForgotPwDialog dialog= new ForgotPwDialog(LoginActivity.this);
+                ForgotPwDialog dialog = new ForgotPwDialog(LoginActivity.this);
                 dialog.show();
 
 
@@ -65,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Log.e("Loginactivity", "login false" + task.getException().getMessage());
                         }
-
+                        finish();
                     }
                 });
             }
