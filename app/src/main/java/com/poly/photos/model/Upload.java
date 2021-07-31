@@ -1,4 +1,4 @@
-package com.poly.photos.view;
+package com.poly.photos.model;
 
 public class Upload {
     private String name;

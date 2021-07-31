@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.poly.photos.R;
-import com.poly.photos.view.Upload;
+import com.poly.photos.model.Upload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

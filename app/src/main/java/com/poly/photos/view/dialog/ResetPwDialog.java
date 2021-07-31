@@ -66,7 +66,7 @@ public class ResetPwDialog extends Dialog implements View.OnClickListener {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), "Password reset failed.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Password reset failed."+e.getMessage(), Toast.LENGTH_LONG).show();
 
                         }
                     });

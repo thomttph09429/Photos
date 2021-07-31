@@ -4,38 +4,60 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.poly.photos.MainActivity;
 import com.poly.photos.R;
+import com.poly.photos.model.Upload;
 import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.view.activity.LoginActivity;
+import com.poly.photos.view.dialog.PostDialog;
 import com.poly.photos.view.dialog.ResetPwDialog;
+import com.poly.photos.view.dialog.UpdateAvartarDialog;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import static com.poly.photos.utils.GlobalUtils.MY_CAMERA_REQUEST_CODE;
@@ -46,11 +68,13 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     private TextView tvEmai, tvPhone, tvName, btnResendCode, tvMsg;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
+    private StorageReference storageReference;
+    private DatabaseReference databaseReference;
     private String userID;
     private ImageView ivAvartar;
-    private ImageButton ib_select_avartar;
+    private ImageButton ib_select_avartar, btnUpdateAvartar;
     private Uri uriAvartar;
-
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +84,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         initAction();
         showInfor();
         setTitle("Account infor");
-
+        showImage();
     }
 
     public void initViews() {
@@ -73,18 +97,22 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         btnResetPw = findViewById(R.id.btn_reset);
         ivAvartar = findViewById(R.id.iv_avartar);
         ib_select_avartar = findViewById(R.id.ib_select_avartar);
+        btnUpdateAvartar = findViewById(R.id.btn_updateAvartar);
+        progressBar = findViewById(R.id.progress_bar);
     }
 
     public void initAction() {
-
-        auth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
         btnLogout.setOnClickListener(this);
         btnResendCode.setOnClickListener(this);
         btnResetPw.setOnClickListener(this);
+        ib_select_avartar.setOnClickListener(this);
+        btnUpdateAvartar.setOnClickListener(this);
 
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
-
 
     public void showInfor() {
         FirebaseUser user = auth.getCurrentUser();
@@ -92,7 +120,6 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         if (!user.isEmailVerified()) {
             btnResendCode.setVisibility(View.VISIBLE);
             tvMsg.setVisibility(View.VISIBLE);
-
         }
         DocumentReference docReference = firestore.collection("users").document(userID);
         docReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
@@ -101,14 +128,9 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                 tvEmai.setText(value.getString("email"));
                 tvName.setText(value.getString("name"));
                 tvPhone.setText(value.getString("phone"));
-
-
             }
         });
-
-
     }
-
 
     @Override
     public void onClick(View v) {
@@ -121,8 +143,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
-                finish();
-
+//                finish();
 
                 break;
             case R.id.tv_resend_code:
@@ -131,33 +152,104 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(v.getContext(), "Verification email has been sent", Toast.LENGTH_LONG).show();
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Reristor", "Onfailure: Email not sent" + e.getMessage());
-
                     }
                 });
                 break;
             case R.id.ib_select_avartar:
+                openFileChooser();
+                break;
+            case R.id.btn_updateAvartar:
+                upLoadImage();
+                break;
             default:
                 break;
         }
+    }
 
+    private void showImage() {
+        StorageReference profile = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+        profile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(MyAccountActivity.this).load(uri)
+                        .fit().centerCrop()
+                        .into(ivAvartar, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
+                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                                imageDrawable.setCircular(true);
+                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                                ivAvartar.setImageDrawable(imageDrawable);
+                                btnUpdateAvartar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
+            }
+        });
     }
 
 
+    private void upLoadImage() {
+
+        if (uriAvartar != null) {
+            StorageReference fileReference = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+            fileReference.putFile(uriAvartar);
+            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    btnUpdateAvartar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(MyAccountActivity.this, "Upload successful", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(MyAccountActivity.this, "No file selected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUES);
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUES && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             uriAvartar = data.getData();
             Picasso.with(MyAccountActivity.this).load(uriAvartar).into(ivAvartar);
+            btnUpdateAvartar.setVisibility(View.VISIBLE);
+            Picasso.with(MyAccountActivity.this).load(uriAvartar)
+                    .fit().centerCrop()
+                    .into(ivAvartar, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
+                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                            imageDrawable.setCircular(true);
+                            imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                            ivAvartar.setImageDrawable(imageDrawable);
+                            btnUpdateAvartar.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
         }
     }
-
 
 }

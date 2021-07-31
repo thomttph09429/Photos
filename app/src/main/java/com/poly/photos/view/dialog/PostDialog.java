@@ -2,28 +2,17 @@ package com.poly.photos.view.dialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
 
-import android.Manifest;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,7 +23,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,13 +30,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.poly.photos.MainActivity;
 import com.poly.photos.R;
-import com.poly.photos.utils.GlobalUtils;
-import com.poly.photos.view.Upload;
+import com.poly.photos.model.Upload;
 import com.squareup.picasso.Picasso;
-
-import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
@@ -188,6 +172,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         if (requestCode == PICK_IMAGE_REQUES && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             uriImage = data.getData();
+            ivPhoto.setVisibility(View.VISIBLE);
             Picasso.with(getContext()).load(uriImage).into(ivPhoto);
         }
     }

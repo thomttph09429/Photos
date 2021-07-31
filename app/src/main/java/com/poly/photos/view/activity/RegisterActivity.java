@@ -24,17 +24,18 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.poly.photos.MainActivity;
 import com.poly.photos.R;
+import com.poly.photos.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText edtName, edtEmail, edtPass, edtPhone;
-    Button btnRegister;
-    FirebaseAuth auth;
-    FirebaseFirestore firestore;
-    TextView btnLogin;
-    String userID;
+  private   EditText edtName, edtEmail, edtPass, edtPhone;
+    private    Button btnRegister;
+    private   FirebaseAuth auth;
+    private  FirebaseFirestore firestore;
+    private  TextView btnLogin;
+    private  String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +106,8 @@ public class RegisterActivity extends AppCompatActivity {
                         });
 
 
-                        Toast.makeText(RegisterActivity.this, "User create", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        Toast.makeText(RegisterActivity.this, "User create", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
 
                     } else {

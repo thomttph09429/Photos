@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.R;
 import com.poly.photos.utils.PostAdapter;
-import com.poly.photos.view.Upload;
+import com.poly.photos.model.Upload;
 import com.poly.photos.view.dialog.PostDialog;
 
 import java.util.ArrayList;

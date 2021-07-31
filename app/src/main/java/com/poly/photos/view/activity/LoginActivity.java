@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         initViews();
         initAction();
 
+        Intent intent = getIntent();
 
         btnForgot.setOnClickListener(new View.OnClickListener() {
             @Override

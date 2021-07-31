@@ -10,6 +10,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,8 +29,7 @@ import com.poly.photos.view.fragment.HomeFragment;
 public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private BottomNavigationView navigation;
-    static MainActivity activity;
-
+ static    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +37,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        activity=this;
+        activity = this;
 
         navigation = findViewById(R.id.navigation);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navigation, navController);
     }
+
     public static MainActivity getInstance() {
-        return activity;
+        return (MainActivity) activity;
     }
 
     @Override
