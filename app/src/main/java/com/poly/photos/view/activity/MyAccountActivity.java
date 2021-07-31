@@ -3,15 +3,22 @@ package com.poly.photos.view.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +33,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.poly.photos.MainActivity;
 import com.poly.photos.R;
+import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.view.activity.LoginActivity;
 import com.poly.photos.view.dialog.ResetPwDialog;
+import com.squareup.picasso.Picasso;
+
+import static com.poly.photos.utils.GlobalUtils.MY_CAMERA_REQUEST_CODE;
+import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener {
     private Button btnLogout, btnResetPw;
@@ -35,6 +47,9 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private String userID;
+    private ImageView ivAvartar;
+    private ImageButton ib_select_avartar;
+    private Uri uriAvartar;
 
 
     @Override
@@ -56,6 +71,8 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         btnResendCode = findViewById(R.id.tv_resend_code);
         tvMsg = findViewById(R.id.tv_verify_msg);
         btnResetPw = findViewById(R.id.btn_reset);
+        ivAvartar = findViewById(R.id.iv_avartar);
+        ib_select_avartar = findViewById(R.id.ib_select_avartar);
     }
 
     public void initAction() {
@@ -67,7 +84,6 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         btnResetPw.setOnClickListener(this);
 
     }
-
 
 
     public void showInfor() {
@@ -125,9 +141,23 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                     }
                 });
                 break;
+            case R.id.ib_select_avartar:
             default:
                 break;
         }
 
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUES && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            uriAvartar = data.getData();
+            Picasso.with(MyAccountActivity.this).load(uriAvartar).into(ivAvartar);
+        }
+    }
+
+
 }

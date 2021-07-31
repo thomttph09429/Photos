@@ -32,14 +32,31 @@
         android:fontFamily="@font/hero_new_extrabold"
         android:text="Your Profile"
         android:textSize="28sp" />
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
 
-    <ImageView
-        android:layout_width="172dp"
-        android:layout_height="154dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:backgroundTint="@color/teal_700"
-        android:src="@drawable/portrait" />
+            <ImageView
+                android:id="@+id/iv_avartar"
+                android:layout_width="158dp"
+                android:layout_height="147dp"
+                android:layout_gravity="center"
+                android:paddingTop="10dp"
+                android:backgroundTint="@color/teal_700"
+                android:src="@drawable/portrait" />
+            <ImageButton
+                android:padding="10dp"
+                android:layout_marginTop="60dp"
+                android:id="@+id/ib_select_avartar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_photo_camera_24" />
+
+        </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
