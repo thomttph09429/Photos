@@ -1,9 +1,14 @@
 package com.poly.photos.view.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,19 +17,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
 import com.poly.photos.utils.PostAdapter;
 import com.poly.photos.model.Upload;
+import com.poly.photos.view.activity.MyAccountActivity;
 import com.poly.photos.view.dialog.PostDialog;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +50,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private PostAdapter postAdapter;
     private ProgressBar progressBar;
     private DatabaseReference databaseRef;
+    private StorageReference storageReference;
+    private FirebaseAuth auth;
     private List<Upload> uploadList;
     private ShimmerFrameLayout shimmerFrameLayout;
+    private ImageView ivAvartar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,35 +71,68 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initViews();
         initAction();
         showPost();
+        getAvartar();
     }
 
+    private void getAvartar() {
+        StorageReference avartar = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+        avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.with(getContext()).load(uri)
+                        .fit().centerCrop()
+                        .into(ivAvartar, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
+                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                                imageDrawable.setCircular(true);
+                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                                ivAvartar.setImageDrawable(imageDrawable);
+                            }
+
+                            @Override
+                            public void onError() {
+
+                            }
+                        });
+            }
+        });
+
+
+
+    }
 
     private void initAction() {
         btnPost.setOnClickListener(this);
         databaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         uploadList = new ArrayList<>();
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        //hien thi item cuoi len dau
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     private void initViews() {
         btnPost = view.findViewById(R.id.btn_post);
+        ivAvartar = view.findViewById(R.id.iv_avartar);
         recyclerView = view.findViewById(R.id.rv_post);
         progressBar = view.findViewById(R.id.progress_bar);
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
+         auth=FirebaseAuth.getInstance();
+         storageReference= FirebaseStorage.getInstance().getReference();
 
     }
 
 
     private void showPost() {
-
-
         databaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Upload upload = dataSnapshot.getValue(Upload.class);
                     uploadList.add(upload);
-
                 }
 
                 postAdapter = new PostAdapter(getContext(), uploadList);

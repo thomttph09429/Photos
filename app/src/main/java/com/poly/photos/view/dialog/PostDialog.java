@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -47,6 +48,8 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
+    private StorageReference storageReference;
+    private FirebaseAuth auth;
 
 
     public PostDialog() {
@@ -82,6 +85,8 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         btnPost.setOnClickListener(this);
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        storageReference= FirebaseStorage.getInstance().getReference();
+        auth=FirebaseAuth.getInstance();
 
     }
 
@@ -127,13 +132,22 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String url = uri.toString();
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    Upload upload = new Upload(edtWrite.getText().toString().trim(),
-                                            url);
-                                    String uploadId = mDatabaseRef.push().getKey();
-                                    mDatabaseRef.child(uploadId).setValue(upload);
-                                    Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
-                                    dismiss();
+
+                                    StorageReference avartar = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+                                    avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String urlAvartar= uri.toString();
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            Upload upload = new Upload(edtWrite.getText().toString().trim(),
+                                                    url,urlAvartar);
+                                            String uploadId = mDatabaseRef.push().getKey();
+                                            mDatabaseRef.child(uploadId).setValue(upload);
+                                            Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
+                                            dismiss();
+                                        }
+                                    });
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

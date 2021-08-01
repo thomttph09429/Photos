@@ -140,7 +140,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                 dialog.show();
                 break;
             case R.id.btn_logout:
-                FirebaseAuth.getInstance().signOut();
+//                FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
 //                finish();
