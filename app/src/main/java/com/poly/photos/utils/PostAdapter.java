@@ -1,8 +1,10 @@
 package com.poly.photos.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.poly.photos.R;
@@ -42,8 +45,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         Upload upload = uploadList.get(position);
         holder.tvState.setText(upload.getName());
         Picasso.with(context).load(upload.getImageUrl()).placeholder(R.drawable.avartar).fit().centerCrop().into(holder.ivPhoto);
-        Picasso.with(context).load(upload.getImagAvartar())
-               .placeholder(R.drawable.portrait)
+        Picasso.with(context).load(upload.getImagAvartar()).fit().centerCrop()
+                .placeholder(R.drawable.portrait)
                 .into(holder.ivAvartar, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -59,6 +62,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
                     }
                 });
+        holder.itemView.setOnClickListener(v -> {
+
+        });
     }
 
     @Override

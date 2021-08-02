@@ -10,8 +10,23 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_accountFragment"
-            app:destination="@id/action_account" />
+            android:id="@+id/action_home_to_action_viewPost"
+            app:destination="@+id/action_viewPost"
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_chat"
+        android:name="com.poly.photos.view.fragment.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat">
+    </fragment>
+    <fragment
+        android:id="@+id/action_create_post"
+        android:name="com.poly.photos.view.fragment.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/fragment_create_post">
+
     </fragment>
     <fragment
         android:id="@+id/action_account"
@@ -20,5 +35,11 @@
         tools:layout="@layout/fragment_account">
 
     </fragment>
+    <fragment
+        android:id="@+id/action_viewPost"
+        android:name="com.poly.photos.view.fragment.ViewPostFragment"
+        android:label="fragment_view_post"
+        tools:layout="@layout/fragment_view_post">
 
+    </fragment>
 </navigation>

@@ -44,7 +44,6 @@ import java.util.List;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private Button btnPost;
     private RecyclerView recyclerView;
     private View view;
     private PostAdapter postAdapter;
@@ -54,7 +53,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth auth;
     private List<Upload> uploadList;
     private ShimmerFrameLayout shimmerFrameLayout;
-    private ImageView ivAvartar;
 
 
     @Override
@@ -71,40 +69,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initViews();
         initAction();
         showPost();
-        getAvartar();
-    }
-
-    private void getAvartar() {
-        StorageReference avartar = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
-        avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(getContext()).load(uri)
-                        .fit().centerCrop()
-                        .into(ivAvartar, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
-                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                                imageDrawable.setCircular(true);
-                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                                ivAvartar.setImageDrawable(imageDrawable);
-                            }
-
-                            @Override
-                            public void onError() {
-
-                            }
-                        });
-            }
-        });
-
-
 
     }
+
+
 
     private void initAction() {
-        btnPost.setOnClickListener(this);
         databaseRef = FirebaseDatabase.getInstance().getReference("uploads");
         uploadList = new ArrayList<>();
         LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
@@ -115,8 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initViews() {
-        btnPost = view.findViewById(R.id.btn_post);
-        ivAvartar = view.findViewById(R.id.iv_avartar);
+
         recyclerView = view.findViewById(R.id.rv_post);
         progressBar = view.findViewById(R.id.progress_bar);
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
