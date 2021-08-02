@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.poly.photos.MainActivity;
 import com.poly.photos.R;
+import com.poly.photos.utils.ProgressBarDialog;
 import com.poly.photos.view.dialog.ForgotPwDialog;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -74,6 +75,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    private void dimissProgress() {
+        ProgressBarDialog.getInstance(this).closeDialog();
+    }
+
+    private void showProgress() {
+        ProgressBarDialog.getInstance(this).showDialog("Please wait..", this);
     }
 
     private void login() {

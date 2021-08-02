@@ -72,7 +72,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        showPost();
+    }
 
     private void initAction() {
         databaseRef = FirebaseDatabase.getInstance().getReference("uploads");

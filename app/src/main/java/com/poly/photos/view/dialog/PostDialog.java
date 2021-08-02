@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.poly.photos.R;
 import com.poly.photos.model.Upload;
+import com.poly.photos.utils.ProgressBarDialog;
 import com.squareup.picasso.Picasso;
 
 import static android.app.Activity.RESULT_OK;
@@ -42,7 +43,6 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     private EditText edtWrite;
     private LinearLayout shareLocation, sharePhoto;
     private ImageView btnPost, ivPhoto;
-    private ProgressBar progressBar;
     private Uri uriImage;
 
     private StorageReference mStorageRef;
@@ -71,7 +71,6 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         shareLocation = view.findViewById(R.id.lnl_share_location);
         sharePhoto = view.findViewById(R.id.lnl_share_photo);
         btnPost = view.findViewById(R.id.btn_post);
-        progressBar = view.findViewById(R.id.progress_bar);
         ivPhoto = view.findViewById(R.id.iv_photo);
         initAction();
         return view;
@@ -85,8 +84,8 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         btnPost.setOnClickListener(this);
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
-        storageReference= FirebaseStorage.getInstance().getReference();
-        auth=FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        auth = FirebaseAuth.getInstance();
 
     }
 
@@ -122,27 +121,32 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
 
     private void upLoadFile() {
         if (uriImage != null) {
+            ProgressBarDialog.getInstance(getContext()).showDialog("Loading", getContext());
+
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(uriImage));
             fileReference.putFile(uriImage)
+
                     .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
                             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String url = uri.toString();
 
-                                    StorageReference avartar = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+                                    StorageReference avartar = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
+                                    ;
                                     avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
-                                            String urlAvartar= uri.toString();
-                                            progressBar.setVisibility(View.INVISIBLE);
+                                            String urlAvartar = uri.toString();
                                             Upload upload = new Upload(edtWrite.getText().toString().trim(),
-                                                    url,urlAvartar);
+                                                    url, urlAvartar);
                                             String uploadId = mDatabaseRef.push().getKey();
                                             mDatabaseRef.child(uploadId).setValue(upload);
+                                            ProgressBarDialog.getInstance(getContext()).closeDialog();
                                             Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                                             dismiss();
                                         }
@@ -153,7 +157,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    progressBar.setVisibility(View.GONE);
+                                    ProgressBarDialog.getInstance(getContext()).closeDialog();
 
                                 }
                             });
@@ -161,11 +165,10 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                    progressBar.setVisibility(View.VISIBLE);
                 }
             });
-        }else {
-            Toast.makeText(getContext(),"No file selected", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
 
         }
     }

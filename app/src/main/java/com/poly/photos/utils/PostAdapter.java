@@ -24,6 +24,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder> {
     private Context context;
     private List<Upload> uploadList;
@@ -47,21 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         Picasso.with(context).load(upload.getImageUrl()).placeholder(R.drawable.avartar).fit().centerCrop().into(holder.ivPhoto);
         Picasso.with(context).load(upload.getImagAvartar()).fit().centerCrop()
                 .placeholder(R.drawable.portrait)
-                .into(holder.ivAvartar, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap imageBitmap = ((BitmapDrawable) holder.ivAvartar.getDrawable()).getBitmap();
-                        RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), imageBitmap);
-                        imageDrawable.setCircular(true);
-                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                        holder.ivAvartar.setImageDrawable(imageDrawable);
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                });
+                .into(holder.ivAvartar);
         holder.itemView.setOnClickListener(v -> {
 
         });
@@ -75,7 +63,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
     public class PostViewholder extends RecyclerView.ViewHolder {
         TextView tvState;
         ImageView ivPhoto;
-        ImageView ivAvartar;
+        CircleImageView ivAvartar;
 
         public PostViewholder(View itemView) {
             super(itemView);

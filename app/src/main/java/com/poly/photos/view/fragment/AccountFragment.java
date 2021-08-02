@@ -1,5 +1,6 @@
 package com.poly.photos.view.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,18 +36,26 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
+import com.poly.photos.utils.GlobalUtils;
+import com.poly.photos.utils.ProgressBarDialog;
 import com.poly.photos.view.activity.LoginActivity;
 import com.poly.photos.view.activity.MyAccountActivity;
 import com.poly.photos.view.dialog.ResetPwDialog;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static android.app.Activity.RESULT_OK;
+import static com.poly.photos.utils.GlobalUtils.MY_CAMERA_UPDATE_COVERPHOTO;
 import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 
 
@@ -58,10 +68,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private String userID;
-    private ImageView ivAvartar;
+    private ImageView ivCover;
+    private CircleImageView ivAvartar;
     private ImageButton ib_select_avartar, btnUpdateAvartar;
     private Uri uriAvartar;
-    private ProgressBar progressBar;
+    private Uri uriCover;
     private View view;
 
     @Override
@@ -105,9 +116,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         tvMsg = view.findViewById(R.id.tv_verify_msg);
         btnResetPw = view.findViewById(R.id.btn_reset);
         ivAvartar = view.findViewById(R.id.iv_avartar);
+        ivCover = view.findViewById(R.id.iv_cover);
         ib_select_avartar = view.findViewById(R.id.ib_select_avartar);
-        btnUpdateAvartar = view.findViewById(R.id.btn_updateAvartar);
-        progressBar = view.findViewById(R.id.progress_bar);
+        btnUpdateAvartar = view.findViewById(R.id.btn_update_photo);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        showImage();
+
     }
 
     @Override
@@ -139,14 +157,56 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 });
                 break;
             case R.id.ib_select_avartar:
-                openFileChooser();
+                chooseUpdate();
                 break;
-            case R.id.btn_updateAvartar:
+            case R.id.btn_update_photo:
                 upLoadImage();
                 break;
             default:
                 break;
         }
+    }
+
+    private void chooseUpdate() {
+
+        PopupMenu popupMenu = new PopupMenu(getContext(), ib_select_avartar);
+        popupMenu.getMenuInflater().inflate(R.menu.choose, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.update_avartar:
+
+                            chooseAvartar();
+                            break;
+
+                        case R.id.update_cover:
+                            chooseCoverPhoto();
+                            break;
+
+
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+
+        );
+        popupMenu.show();
+    }
+
+    private void chooseAvartar() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUES);
+
+    }
+
+    private void chooseCoverPhoto() {
+        Intent cover = new Intent();
+        cover.setType("image/*");
+        cover.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(cover, GlobalUtils.MY_CAMERA_UPDATE_COVERPHOTO);
+
     }
 
     public void showInfor() {
@@ -157,84 +217,104 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             tvMsg.setVisibility(View.VISIBLE);
         }
 
-            DocumentReference docReference = firestore.collection("users").document(userID);
-            docReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                   if (auth.getCurrentUser()!= null){
-                       tvEmai.setText(value.getString("email"));
-                       tvName.setText(value.getString("name"));
-                       tvPhone.setText(value.getString("phone"));
-                   }
-
+        DocumentReference docReference = firestore.collection("users").document(userID);
+        docReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (auth.getCurrentUser() != null) {
+                    tvEmai.setText(value.getString("email"));
+                    tvName.setText(value.getString("name"));
+                    tvPhone.setText(value.getString("phone"));
                 }
-            });
+
+            }
+        });
 
 
     }
 
     private void showImage() {
-        if (auth.getCurrentUser()!= null){
-            StorageReference profile = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+        if (auth.getCurrentUser() != null) {
+            StorageReference profile = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
+            ;
             profile.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     Picasso.with(getContext()).load(uri)
                             .fit().centerCrop()
-                            .into(ivAvartar, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
-                                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                                    imageDrawable.setCircular(true);
-                                    imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                                    ivAvartar.setImageDrawable(imageDrawable);
-                                    btnUpdateAvartar.setVisibility(View.GONE);
-                                }
-
-                                @Override
-                                public void onError() {
-
-                                }
-                            });
+                            .into(ivAvartar);
+                }
+            });
+            StorageReference cover = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "cover.jpg");
+            cover.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getContext()).load(uri)
+                            .fit().centerCrop()
+                            .into(ivCover);
                 }
             });
         }
 
     }
 
+    private void dimissProgress() {
+        ProgressBarDialog.getInstance(getContext()).closeDialog();
+    }
+
+    private void showProgress() {
+        ProgressBarDialog.getInstance(getContext()).showDialog("Please wait..", getContext());
+    }
+
     private void upLoadImage() {
+        showProgress();
+
+        if (uriCover != null) {
+            StorageReference fileReference = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "cover.jpg");
+            fileReference.putFile(uriCover);
+            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    btnUpdateAvartar.setVisibility(View.INVISIBLE);
+                    dimissProgress();
+                    Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         if (uriAvartar != null) {
-            StorageReference fileReference = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+
+            StorageReference fileReference = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
             fileReference.putFile(uriAvartar);
             fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     btnUpdateAvartar.setVisibility(View.INVISIBLE);
+                    dimissProgress();
                     Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_SHORT).show();
                 }
             });
-        } else {
-            Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void openFileChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUES);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == MY_CAMERA_UPDATE_COVERPHOTO && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+
+            uriCover = data.getData();
+            Picasso.with(getContext()).load(uriCover).fit().centerCrop().into(ivCover);
+            btnUpdateAvartar.setVisibility(View.VISIBLE);
+
+
+        }
         if (requestCode == PICK_IMAGE_REQUES && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             uriAvartar = data.getData();
             Picasso.with(getContext()).load(uriAvartar).into(ivAvartar);
             btnUpdateAvartar.setVisibility(View.VISIBLE);
-            Picasso.with(getContext()).load(uriAvartar)
+            Picasso.with(getContext()).load(uriAvartar).placeholder(R.drawable.sky)
                     .fit().centerCrop()
                     .into(ivAvartar, new Callback() {
                         @Override
@@ -252,6 +332,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
                         }
                     });
+
+
         }
     }
 }

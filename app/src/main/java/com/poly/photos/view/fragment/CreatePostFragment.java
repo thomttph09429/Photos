@@ -24,8 +24,10 @@ import com.poly.photos.view.dialog.PostDialog;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class CreatePostFragment extends Fragment implements View.OnClickListener {
-    private ImageView ivAvartar;
+    private CircleImageView ivAvartar;
     private Button btnPost;
     private View view;
     private StorageReference storageReference;
@@ -67,21 +69,7 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
             public void onSuccess(Uri uri) {
                 Picasso.with(getContext()).load(uri)
                         .fit().centerCrop()
-                        .into(ivAvartar, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
-                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getActivity().getResources(), imageBitmap);
-                                imageDrawable.setCircular(true);
-                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                                ivAvartar.setImageDrawable(imageDrawable);
-                            }
-
-                            @Override
-                            public void onError() {
-
-                            }
-                        });
+                        .into(ivAvartar);
             }
         });
 

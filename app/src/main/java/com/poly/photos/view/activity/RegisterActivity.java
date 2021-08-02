@@ -25,17 +25,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.poly.photos.MainActivity;
 import com.poly.photos.R;
 import com.poly.photos.model.User;
+import com.poly.photos.utils.ProgressBarDialog;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
-  private   EditText edtName, edtEmail, edtPass, edtPhone;
-    private    Button btnRegister;
-    private   FirebaseAuth auth;
-    private  FirebaseFirestore firestore;
-    private  TextView btnLogin;
-    private  String userID;
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+    private EditText edtName, edtEmail, edtPass, edtPhone;
+    private Button btnRegister;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
+    FirebaseUser user;
+    private TextView btnLogin;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +47,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         initActive();
 
 
-
-        if (auth.getCurrentUser() != null) {
+        if (auth.getCurrentUser() != null && user.isEmailVerified()) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
 
         }
     }
+
     public void findViews() {
         edtEmail = findViewById(R.id.edt_email);
         edtName = findViewById(R.id.edt_name);
@@ -63,8 +65,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void initActive() {
-
         auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
         btnLogin.setOnClickListener(this);
         btnRegister.setOnClickListener(this);
@@ -73,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_login:
                 login();
                 break;
@@ -92,7 +94,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    private void dimissProgress() {
+        ProgressBarDialog.getInstance(this).closeDialog();
+    }
+
+    private void showProgress() {
+        ProgressBarDialog.getInstance(this).showDialog("Please wait..", this);
+    }
+
     private void register() {
+
+
         String email = edtEmail.getText().toString();
         String pass = edtPass.getText().toString();
         String name = edtName.getText().toString();
@@ -113,19 +125,22 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                showProgress();
                 if (task.isSuccessful()) {
 
                     FirebaseUser user = auth.getCurrentUser();
                     user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            dimissProgress();
                             Toast.makeText(RegisterActivity.this, "Verification email has been sent", Toast.LENGTH_LONG).show();
 
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.e("Reristor", "Onfailure: Email not sent" + e.getMessage());
+                            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
 
                         }
                     });
@@ -145,7 +160,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     });
 
 
-                    Toast.makeText(RegisterActivity.this, "User create", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Please confirm to continue!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                     finish();
 
