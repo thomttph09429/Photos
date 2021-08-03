@@ -1,10 +1,7 @@
 package com.poly.photos.utils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
-import com.poly.photos.model.Upload;
-import com.squareup.picasso.Callback;
+import com.poly.photos.model.Post;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,11 +27,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder> {
     private Context context;
-    private List<Upload> uploadList;
+    private List<Post> postList;
+    private  List<String> followingList;
 
-    public PostAdapter(Context context, List<Upload> uploadList) {
+
+
+    public PostAdapter(Context context, List<Post> postList) {
         this.context = context;
-        this.uploadList = uploadList;
+        this.postList = postList;
     }
 
     @NonNull
@@ -44,10 +46,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
     @Override
     public void onBindViewHolder(@NonNull PostAdapter.PostViewholder holder, int position) {
-        Upload upload = uploadList.get(position);
-        holder.tvState.setText(upload.getName());
-        Picasso.with(context).load(upload.getImageUrl()).placeholder(R.drawable.avartar).fit().centerCrop().into(holder.ivPhoto);
-        Picasso.with(context).load(upload.getImagAvartar()).fit().centerCrop()
+        Post upload = postList.get(position);
+        holder.tvState.setText(upload.getDescription());
+        Picasso.with(context).load(upload.getPostimage()).placeholder(R.drawable.portrait).fit().centerCrop().into(holder.ivPhoto);
+        Picasso.with(context).load(upload.getAvartar()).fit().centerCrop()
                 .placeholder(R.drawable.portrait)
                 .into(holder.ivAvartar);
         holder.itemView.setOnClickListener(v -> {
@@ -57,7 +59,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
     @Override
     public int getItemCount() {
-        return uploadList.size();
+        return postList.size();
     }
 
     public class PostViewholder extends RecyclerView.ViewHolder {

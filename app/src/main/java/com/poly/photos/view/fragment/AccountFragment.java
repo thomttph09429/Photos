@@ -25,12 +25,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -39,6 +45,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.poly.photos.R;
 import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.utils.ProgressBarDialog;
@@ -124,8 +132,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPause() {
         super.onPause();
-        showImage();
-
+        showInfor();
     }
 
     @Override
@@ -211,28 +218,39 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     public void showInfor() {
         FirebaseUser user = auth.getCurrentUser();
-        userID = auth.getCurrentUser().getUid();
-        if (!user.isEmailVerified()) {
-            btnResendCode.setVisibility(View.VISIBLE);
-            tvMsg.setVisibility(View.VISIBLE);
-        }
+        if (user!=null){
+            userID = auth.getCurrentUser().getUid();
+            if (!user.isEmailVerified()) {
+                btnResendCode.setVisibility(View.VISIBLE);
+                tvMsg.setVisibility(View.VISIBLE);
+            }
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String name = snapshot.child("name").getValue(String.class);
+                        String email = snapshot.child("email").getValue(String.class);
+                        String phone = snapshot.child("phone").getValue(String.class);
 
-        DocumentReference docReference = firestore.collection("users").document(userID);
-        docReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (auth.getCurrentUser() != null) {
-                    tvEmai.setText(value.getString("email"));
-                    tvName.setText(value.getString("name"));
-                    tvPhone.setText(value.getString("phone"));
+                        tvEmai.setText(email);
+                        tvPhone.setText(phone);
+                        tvName.setText(name);
+
+
+                    }
                 }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
 
 
     }
-
     private void showImage() {
         if (auth.getCurrentUser() != null) {
             StorageReference profile = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
@@ -314,24 +332,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             uriAvartar = data.getData();
             Picasso.with(getContext()).load(uriAvartar).into(ivAvartar);
             btnUpdateAvartar.setVisibility(View.VISIBLE);
-            Picasso.with(getContext()).load(uriAvartar).placeholder(R.drawable.sky)
-                    .fit().centerCrop()
-                    .into(ivAvartar, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Bitmap imageBitmap = ((BitmapDrawable) ivAvartar.getDrawable()).getBitmap();
-                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                            imageDrawable.setCircular(true);
-                            imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                            ivAvartar.setImageDrawable(imageDrawable);
-                            btnUpdateAvartar.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError() {
-
-                        }
-                    });
 
 
         }

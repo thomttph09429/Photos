@@ -63,7 +63,7 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
     }
 
     private void getAvartar() {
-        StorageReference avartar = storageReference.child("users" + auth.getCurrentUser().getUid() + "profile.jpg");
+        StorageReference avartar = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
         avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

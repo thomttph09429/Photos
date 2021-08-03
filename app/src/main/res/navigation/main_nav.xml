@@ -14,6 +14,8 @@
             app:destination="@+id/action_viewPost"
             />
 
+
+
     </fragment>
     <fragment
         android:id="@+id/action_chat"
@@ -40,6 +42,14 @@
         android:name="com.poly.photos.view.fragment.ViewPostFragment"
         android:label="fragment_view_post"
         tools:layout="@layout/fragment_view_post">
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_serach"
+        android:name="com.poly.photos.view.fragment.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+
 
     </fragment>
 </navigation>

@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.poly.photos.MainActivity;
@@ -47,8 +49,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         initActive();
 
 
-        if (auth.getCurrentUser() != null && user.isEmailVerified()) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        if (auth.getCurrentUser() != null ) {
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
             finish();
 
         }
@@ -147,15 +149,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
                     userID = auth.getCurrentUser().getUid();
-                    DocumentReference documentReference = firestore.collection("users").document(userID);
                     Map<String, Object> muser = new HashMap<>();
                     muser.put("name", name);
                     muser.put("phone", phone);
                     muser.put("email", email);
-                    documentReference.set(muser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    muser.put("id", userID);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
+                    ref.setValue(muser).addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.e("register", "create success" + userID);
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("register", "create success" + e.getMessage());
+
                         }
                     });
 

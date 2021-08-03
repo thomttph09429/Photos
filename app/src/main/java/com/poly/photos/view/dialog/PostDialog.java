@@ -16,9 +16,9 @@ import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,9 +32,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.poly.photos.R;
-import com.poly.photos.model.Upload;
+import com.poly.photos.model.Post;
 import com.poly.photos.utils.ProgressBarDialog;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
@@ -82,8 +84,8 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         sharePhoto.setOnClickListener(this);
         shareLocation.setOnClickListener(this);
         btnPost.setOnClickListener(this);
-        mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("uploads");
+        mStorageRef = FirebaseStorage.getInstance().getReference("Posts");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Posts");
         storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
@@ -101,11 +103,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
 
                 break;
             case R.id.btn_post:
-                if (mUploadTask != null && mUploadTask.isInProgress()) {
-                    Toast.makeText(getContext(), "Upload in progress", Toast.LENGTH_SHORT).show();
-                } else {
-                    upLoadFile();
-                }
+              upLoadFile();
                 break;
         }
 
@@ -141,11 +139,12 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                                     avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
+                                            String postId = mDatabaseRef.push().getKey();
+
                                             String urlAvartar = uri.toString();
-                                            Upload upload = new Upload(edtWrite.getText().toString().trim(),
-                                                    url, urlAvartar);
-                                            String uploadId = mDatabaseRef.push().getKey();
-                                            mDatabaseRef.child(uploadId).setValue(upload);
+                                            Post upload = new Post(postId,url,edtWrite.getText().toString().trim(),FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                                                     urlAvartar);
+                                            mDatabaseRef.child(postId).setValue(upload);
                                             ProgressBarDialog.getInstance(getContext()).closeDialog();
                                             Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
                                             dismiss();

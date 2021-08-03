@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/account"
-        android:icon="@drawable/ic_account_circle_24"
+        android:id="@+id/search"
         app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_search_24"
         android:iconTint="@color/white"
         android:title="Profile">
     </item>

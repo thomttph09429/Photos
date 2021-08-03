@@ -1,14 +1,9 @@
 package com.poly.photos.view.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,13 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,11 +25,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
 import com.poly.photos.utils.PostAdapter;
-import com.poly.photos.model.Upload;
-import com.poly.photos.view.activity.MyAccountActivity;
+import com.poly.photos.model.Post;
 import com.poly.photos.view.dialog.PostDialog;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +40,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private DatabaseReference databaseRef;
     private StorageReference storageReference;
     private FirebaseAuth auth;
-    private List<Upload> uploadList;
+    private List<Post> postList;
+    private List<String> followingList;
     private ShimmerFrameLayout shimmerFrameLayout;
 
 
@@ -68,7 +58,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initViews();
         initAction();
-        showPost();
+//        showPost();
+        checkFollowing();
 
     }
 
@@ -79,13 +70,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initAction() {
-        databaseRef = FirebaseDatabase.getInstance().getReference("uploads");
-        uploadList = new ArrayList<>();
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+        databaseRef = FirebaseDatabase.getInstance().getReference("Posts");
+        postList = new ArrayList<>();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         //hien thi item cuoi len dau
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
+        postAdapter = new PostAdapter(getContext(), postList);
+        recyclerView.setAdapter(postAdapter);
     }
 
     private void initViews() {
@@ -93,8 +86,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView = view.findViewById(R.id.rv_post);
         progressBar = view.findViewById(R.id.progress_bar);
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
-         auth=FirebaseAuth.getInstance();
-         storageReference= FirebaseStorage.getInstance().getReference();
+        auth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
     }
 
@@ -104,12 +97,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Upload upload = dataSnapshot.getValue(Upload.class);
-                    uploadList.add(upload);
-                }
+                    Post post = dataSnapshot.getValue(Post.class);
+                    for (String id : followingList) {
+                        if (post.getPublisher().equals(id)) {
+                            postList.add(post);
 
-                postAdapter = new PostAdapter(getContext(), uploadList);
-                recyclerView.setAdapter(postAdapter);
+                        }
+                    }
+
+                }
+                postAdapter.notifyDataSetChanged();
+
 
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.hideShimmer();
@@ -125,6 +123,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 shimmerFrameLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
 
+
+            }
+        });
+
+    }
+
+    private void checkFollowing() {
+        followingList = new ArrayList<>();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("Follow").child(FirebaseAuth.getInstance().getCurrentUser()
+                        .getUid()).child("following");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    followingList.add(dataSnapshot.getKey());
+                    showPost();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });

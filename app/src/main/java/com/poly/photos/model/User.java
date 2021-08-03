@@ -1,8 +1,19 @@
 package com.poly.photos.model;
 
 public class User {
- private    String name;
-  private String avartar;
+    private String avartar;
+    private String name;
+    private String email;
+    private String cover;
+    private String phone;
+    private String id;
+    public String getAvartar() {
+        return avartar;
+    }
+
+    public void setAvartar(String avartar) {
+        this.avartar = avartar;
+    }
 
     public String getName() {
         return name;
@@ -12,17 +23,52 @@ public class User {
         this.name = name;
     }
 
-    public String getAvartar() {
-        return avartar;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAvartar(String avartar) {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public User() {
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public User(String avartar, String name, String email, String cover, String phone, String id) {
         this.avartar = avartar;
-    }
-
-    public User(String name, String avartar) {
-
         this.name = name;
-        this.avartar = avartar;
+        this.email = email;
+        this.cover = cover;
+        this.phone = phone;
+        this.id = id;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+
+
+
+
 }

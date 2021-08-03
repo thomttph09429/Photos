@@ -74,18 +74,30 @@
                 android:src="@drawable/ic_baseline_recommend_24" />
 
             <ImageView
-                android:id="@+id/ib_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/ib_haha"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_baseline_mode_comment_24" />
+                android:src="@drawable/ic_heart" />
+            <ImageView
+                android:id="@+id/ib_heart"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/ic_love" />
+            <ImageView
+                android:id="@+id/ib_comment"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/ic_comment" />
 
             <ImageView
                 android:id="@+id/ib_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="200dp"
-                android:src="@drawable/ic_baseline_ios_share_24" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="60dp"
+                android:src="@drawable/ic_share" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
