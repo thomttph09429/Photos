@@ -1,4 +1,4 @@
-package com.poly.photos.utils;
+package com.poly.photos.utils.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.R;
 import com.poly.photos.model.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -52,25 +53,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
         final User user = userList.get(position);
 
         holder.tvName.setText(user.getName());
-//        Picasso.with(context).load(user.getAvartar()).placeholder(R.drawable.portrait).into(holder.ivAvartar);
-        if (user.getId() == firebaseUser.getUid()) ;
+        Picasso.with(context).load(user.getAvartar()).placeholder(R.drawable.portrait).into(holder.ivAvartar);
         holder.btnFollow.setVisibility(View.VISIBLE);
         isFollowing(user.getId(), holder.btnFollow);
+        if (user.getId() .equals( firebaseUser.getUid())) {
+            holder.btnFollow.setVisibility(View.GONE);
 
-//        holder.itemView.setOnClickListener(v -> {
-//            if (isFragment) {
-//                SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-//                editor.putString("profileid", user.getId());
-//                editor.apply();
-//
-//                ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        new ProfileFragment()).commit();
-//            } else {
-//                Intent intent = new Intent(mContext, MainActivity.class);
-//                intent.putExtra("publisherid", user.getId());
-//                mContext.startActivity(intent);
-//            }
-//        });
+        }
+
+
+
+
+
         holder.btnFollow.setOnClickListener(v -> {
             if (holder.btnFollow.getText().toString().equals("follow")) {
                 FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())

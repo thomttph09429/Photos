@@ -3,6 +3,9 @@ package com.poly.photos.view.dialog;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
+import androidx.navigation.Navigation;
 
 
 import android.content.ContentResolver;
@@ -24,8 +27,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -46,7 +52,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     private LinearLayout shareLocation, sharePhoto;
     private ImageView btnPost, ivPhoto;
     private Uri uriImage;
-
+    private View view;
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
     private StorageTask mUploadTask;
@@ -67,8 +73,10 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (view == null) {
+            view = inflater.inflate(R.layout.dialog_post, container);
 
-        View view = inflater.inflate(R.layout.dialog_post, container);
+        }
         edtWrite = view.findViewById(R.id.edt_write);
         shareLocation = view.findViewById(R.id.lnl_share_location);
         sharePhoto = view.findViewById(R.id.lnl_share_photo);
@@ -103,7 +111,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
 
                 break;
             case R.id.btn_post:
-              upLoadFile();
+                upLoadFile();
                 break;
         }
 
@@ -117,10 +125,19 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
+    private void showProgress() {
+        ProgressBarDialog.getInstance(getContext()).showDialog("Loading", getContext());
+
+    }
+
+    private void dimissProgress() {
+        ProgressBarDialog.getInstance(getContext()).closeDialog();
+
+    }
+
     private void upLoadFile() {
         if (uriImage != null) {
-            ProgressBarDialog.getInstance(getContext()).showDialog("Loading", getContext());
-
+            showProgress();
             StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(uriImage));
             fileReference.putFile(uriImage)
@@ -133,21 +150,33 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String url = uri.toString();
-
                                     StorageReference avartar = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
                                     ;
                                     avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
-                                            String postId = mDatabaseRef.push().getKey();
 
-                                            String urlAvartar = uri.toString();
-                                            Post upload = new Post(postId,url,edtWrite.getText().toString().trim(),FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                                                     urlAvartar);
-                                            mDatabaseRef.child(postId).setValue(upload);
-                                            ProgressBarDialog.getInstance(getContext()).closeDialog();
-                                            Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
-                                            dismiss();
+                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                            ref.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if (snapshot.exists()) {
+                                                        String name = snapshot.child("name").getValue(String.class);
+                                                        String postId = mDatabaseRef.push().getKey();
+                                                        String urlAvartar = uri.toString();
+                                                        Post upload = new Post(postId, url, edtWrite.getText().toString().trim(), auth.getCurrentUser().getUid(),
+                                                                urlAvartar, name);
+                                                        mDatabaseRef.child(postId).setValue(upload);
+                                                        dimissProgress();
+                                                        Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
+                                                        dismiss();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                }
+                                            });
                                         }
                                     });
 
@@ -189,7 +218,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                 && data != null && data.getData() != null) {
             uriImage = data.getData();
             ivPhoto.setVisibility(View.VISIBLE);
-            Picasso.with(getContext()).load(uriImage).into(ivPhoto);
+            Picasso.with(getContext()).load(uriImage).fit().centerCrop().into(ivPhoto);
         }
     }
 

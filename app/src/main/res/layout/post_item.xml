@@ -64,39 +64,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_gravity="center"
             android:padding="15dp">
 
-            <ImageView
-
-                android:id="@+id/ib_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_recommend_24" />
 
             <ImageView
-                android:id="@+id/ib_haha"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/iv_care"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_heart" />
+                android:src="@drawable/ic_care" />
+            <TextView
+                android:id="@+id/tv_care"
+                android:layout_marginLeft="4dp"
+                android:layout_width="30sp"
+                android:layout_height="25dp"
+                android:text="10"
+                />
+
             <ImageView
-                android:id="@+id/ib_heart"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/iv_like"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginLeft="40dp"
                 android:src="@drawable/ic_love" />
+            <TextView
+                android:id="@+id/tv_like"
+                android:layout_marginLeft="4dp"
+                android:layout_width="30sp"
+                android:layout_height="25dp"
+                android:text="10"
+                />
             <ImageView
-                android:id="@+id/ib_comment"
+                android:id="@+id/iv_comment"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginLeft="40dp"
                 android:src="@drawable/ic_comment" />
+            <TextView
+                android:id="@+id/tv_comment"
+                android:layout_marginLeft="4dp"
+                android:layout_width="30sp"
+                android:layout_height="25dp"
+                android:text="10"
+                />
 
             <ImageView
-                android:id="@+id/ib_share"
+                android:id="@+id/iv_share"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginLeft="60dp"
+                android:layout_marginLeft="70dp"
                 android:src="@drawable/ic_share" />
         </LinearLayout>
     </LinearLayout>

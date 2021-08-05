@@ -259,7 +259,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onSuccess(Uri uri) {
                     Picasso.with(getContext()).load(uri)
-                            .fit().centerCrop()
                             .into(ivAvartar);
                 }
             });

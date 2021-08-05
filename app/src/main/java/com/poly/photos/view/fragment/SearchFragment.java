@@ -24,7 +24,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.R;
 import com.poly.photos.model.User;
-import com.poly.photos.utils.UserAdapter;
+import com.poly.photos.utils.adapter.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

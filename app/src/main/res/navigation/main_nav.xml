@@ -9,11 +9,17 @@
         android:name="com.poly.photos.view.fragment.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
-        <action
-            android:id="@+id/action_home_to_action_viewPost"
-            app:destination="@+id/action_viewPost"
-            />
 
+        <action
+            android:id="@+id/action_home_to_action_comment"
+            app:destination="@+id/action_comment"
+            />
+        <argument
+            android:name="postId"
+            app:argType="string" />
+        <argument
+            android:name="publisherId"
+            app:argType="string" />
 
 
     </fragment>
@@ -51,5 +57,17 @@
         tools:layout="@layout/fragment_search">
 
 
+
     </fragment>
+    <fragment
+        android:id="@+id/action_post"
+        android:name="com.poly.photos.view.dialog.PostDialog"
+        android:label="fragment_search"
+        tools:layout="@layout/dialog_post">
+    <action
+        android:id="@+id/action_post_to_action_home"
+        app:destination="@+id/action_home"
+        />
+    </fragment>
+
 </navigation>

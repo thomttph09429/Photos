@@ -4,8 +4,27 @@ public class Post {
     private String postid;
     private String postimage;
     private String description;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Post(String postid, String postimage, String description, String publisher, String avartar, String userName) {
+        this.postid = postid;
+        this.postimage = postimage;
+        this.description = description;
+        this.publisher = publisher;
+        this.avartar = avartar;
+        this.userName = userName;
+    }
+
     private String publisher;
     private String avartar;
+    private  String userName;
 
 
     public String getPostid() {

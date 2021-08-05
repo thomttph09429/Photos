@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
-import com.poly.photos.utils.PostAdapter;
+import com.poly.photos.utils.adapter.PostAdapter;
 import com.poly.photos.model.Post;
 import com.poly.photos.view.dialog.PostDialog;
 
@@ -58,16 +58,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initViews();
         initAction();
-//        showPost();
-        checkFollowing();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+//        checkFollowing();
         showPost();
     }
+
+
 
     private void initAction() {
         databaseRef = FirebaseDatabase.getInstance().getReference("Posts");
@@ -98,21 +93,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-                    for (String id : followingList) {
-                        if (post.getPublisher().equals(id)) {
-                            postList.add(post);
-
-                        }
-                    }
-
+//                    for (String id : followingList) {
+//                        if (post.getPublisher().equals(id)) {
+//                            postList.add(post);
+//
+//                        }
+//                    }
+                    postList.add(post);
                 }
                 postAdapter.notifyDataSetChanged();
 
+                recyclerView.setVisibility(View.VISIBLE);
 
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.hideShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -129,28 +124,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private void checkFollowing() {
-        followingList = new ArrayList<>();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-                .getReference("Follow").child(FirebaseAuth.getInstance().getCurrentUser()
-                        .getUid()).child("following");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    followingList.add(dataSnapshot.getKey());
-                    showPost();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
+//    private void checkFollowing() {
+//        followingList = new ArrayList<>();
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+//                .getReference("Follow").child(FirebaseAuth.getInstance().getCurrentUser()
+//                        .getUid()).child("following");
+//
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    followingList.add(dataSnapshot.getKey());
+//                    showPost();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
+//    }
 
     @Override
     public void onClick(View v) {

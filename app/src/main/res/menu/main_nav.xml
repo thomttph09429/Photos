@@ -14,7 +14,7 @@
 
 
     <item android:id="@+id/action_notification"
-        android:title="Account"
+        android:title="Notification"
         android:icon="@drawable/ic_baseline_circle_notifications_24" />
 
     <item android:id="@+id/action_account"
