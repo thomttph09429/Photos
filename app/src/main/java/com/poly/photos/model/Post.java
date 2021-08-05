@@ -3,29 +3,13 @@ package com.poly.photos.model;
 public class Post {
     private String postid;
     private String postimage;
+
+    public Post() {
+    }
+
     private String description;
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Post(String postid, String postimage, String description, String publisher, String avartar, String userName) {
-        this.postid = postid;
-        this.postimage = postimage;
-        this.description = description;
-        this.publisher = publisher;
-        this.avartar = avartar;
-        this.userName = userName;
-    }
-
     private String publisher;
-    private String avartar;
-    private  String userName;
-
 
     public String getPostid() {
         return postid;
@@ -55,30 +39,14 @@ public class Post {
         return publisher;
     }
 
-    public Post() {
-    }
-
-    public Post(String postid, String postimage, String description, String publisher, String avartar) {
-        this.postid = postid;
-        this.postimage = postimage;
-        this.description = description;
-        this.publisher = publisher;
-        this.avartar = avartar;
-    }
-
-    public String getAvartar() {
-        return avartar;
-    }
-
-    public void setAvartar(String avartar) {
-        this.avartar = avartar;
-    }
-
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
-
-
-
+    public Post(String postid, String postimage, String description, String publisher) {
+        this.postid = postid;
+        this.postimage = postimage;
+        this.description = description;
+        this.publisher = publisher;
+    }
 }

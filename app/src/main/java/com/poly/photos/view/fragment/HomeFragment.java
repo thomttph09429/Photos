@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private View view;
     private PostAdapter postAdapter;
     private ProgressBar progressBar;
-    private DatabaseReference databaseRef;
     private StorageReference storageReference;
     private FirebaseAuth auth;
     private List<Post> postList;
@@ -65,7 +64,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private void initAction() {
-        databaseRef = FirebaseDatabase.getInstance().getReference("Posts");
         postList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         //hien thi item cuoi len dau
@@ -88,9 +86,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private void showPost() {
-        databaseRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
 //                    for (String id : followingList) {

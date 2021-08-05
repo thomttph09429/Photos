@@ -53,9 +53,9 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     private ImageView btnPost, ivPhoto;
     private Uri uriImage;
     private View view;
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
-    private StorageTask mUploadTask;
+    private StorageReference storageRef;
+//    private DatabaseReference mDatabaseRef;
+    private StorageTask uploadTask;
     private StorageReference storageReference;
     private FirebaseAuth auth;
 
@@ -92,8 +92,8 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         sharePhoto.setOnClickListener(this);
         shareLocation.setOnClickListener(this);
         btnPost.setOnClickListener(this);
-        mStorageRef = FirebaseStorage.getInstance().getReference("Posts");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Posts");
+        storageRef = FirebaseStorage.getInstance().getReference("Posts");
+//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Posts");
         storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
@@ -136,65 +136,53 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     }
 
     private void upLoadFile() {
+        showProgress();
         if (uriImage != null) {
-            showProgress();
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
+            final StorageReference fileReference = storageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(uriImage));
-            fileReference.putFile(uriImage)
 
-                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-
-                            fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String url = uri.toString();
-                                    StorageReference avartar = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
-                                    ;
-                                    avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-
-                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                            ref.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-                                                        String name = snapshot.child("name").getValue(String.class);
-                                                        String postId = mDatabaseRef.push().getKey();
-                                                        String urlAvartar = uri.toString();
-                                                        Post upload = new Post(postId, url, edtWrite.getText().toString().trim(), auth.getCurrentUser().getUid(),
-                                                                urlAvartar, name);
-                                                        mDatabaseRef.child(postId).setValue(upload);
-                                                        dimissProgress();
-                                                        Toast.makeText(getContext(), "Upload successful", Toast.LENGTH_LONG).show();
-                                                        dismiss();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    ProgressBarDialog.getInstance(getContext()).closeDialog();
-
-                                }
-                            });
-                        }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            uploadTask = fileReference.putFile(uriImage);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return fileReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        String miUrlOk = downloadUri.toString();
+
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+
+                        String postid = reference.push().getKey();
+
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("description", edtWrite.getText().toString());
+                        hashMap.put("postid", postid);
+                        hashMap.put("postimage", miUrlOk);
+                        hashMap.put("publisher", auth.getCurrentUser().getUid());
+
+                        reference.child(postid).setValue(hashMap);
+                        dimissProgress();
+                        dismiss();
+                        Toast.makeText(getContext(), "Post successful !", Toast.LENGTH_SHORT).show();
+
+
+                    } else {
+                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
                 }
             });
+
         } else {
             Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
 

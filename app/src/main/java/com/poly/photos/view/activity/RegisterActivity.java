@@ -154,6 +154,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     muser.put("phone", phone);
                     muser.put("email", email);
                     muser.put("id", userID);
+                    muser.put("avartar","default");
+                    muser.put("cover","default");
+
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
                     ref.setValue(muser).addOnFailureListener(new OnFailureListener() {
                         @Override

@@ -1,5 +1,6 @@
 package com.poly.photos.view.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
 import com.poly.photos.model.Comment;
+import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.CommentAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -105,15 +107,19 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     private void getAvartar() {
-        StorageReference avartar = storageReference.child("photo").child(firebaseUser.getUid() + "avartar.jpg");
-        avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(getApplicationContext()).load(uri)
-                        .into(ivAvartar);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                Picasso.with(CommentActivity.this).load(user.getAvartar()).into(ivAvartar);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
 
     }
 

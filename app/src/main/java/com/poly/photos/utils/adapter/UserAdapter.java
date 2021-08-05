@@ -54,6 +54,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
 
         holder.tvName.setText(user.getName());
         Picasso.with(context).load(user.getAvartar()).placeholder(R.drawable.portrait).into(holder.ivAvartar);
+
+
         holder.btnFollow.setVisibility(View.VISIBLE);
         isFollowing(user.getId(), holder.btnFollow);
         if (user.getId() .equals( firebaseUser.getUid())) {

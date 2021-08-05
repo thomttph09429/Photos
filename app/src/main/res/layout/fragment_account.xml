@@ -6,43 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <ScrollView
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/iv_cover"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="200dp"
+                android:src="@drawable/sky" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/iv_cover"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:src="@drawable/sky" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/iv_avartar"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="100dp"
-                        android:backgroundTint="@color/purple_500"
-                        android:gravity="center"
-                        android:src="@drawable/portrait" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_avartar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="100dp"
+                android:backgroundTint="@color/purple_500"
+                android:src="@drawable/portrait" />
 
             <ImageButton
                 android:id="@+id/ib_select_avartar"
@@ -55,178 +44,191 @@
 
             <ImageButton
 
-                        android:id="@+id/btn_update_photo"
-                        android:layout_width="70dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/ic_baseline_send_24"
-                        android:textAllCaps="false"
-                        android:visibility="gone" />
-
-
-                </RelativeLayout>
-
-
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="20dp"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    <TextView-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:fontFamily="@font/arial_bold"-->
-                <!--                        android:text="Your email:" />-->
-
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/tv_email"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginLeft="20dp"-->
-                <!--                        android:fontFamily="@font/cochin"-->
-                <!--                        android:text="Youryour email" />-->
-                <!--                </LinearLayout>-->
-
-
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="15dp"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    <TextView-->
-
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:fontFamily="@font/arial_bold"-->
-                <!--                        android:text="Your name:" />-->
-
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/tv_name"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginLeft="20dp"-->
-                <!--                        android:fontFamily="@font/cochin"-->
-                <!--                        android:text="Your name" />-->
-                <!--                </LinearLayout>-->
-
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="15dp"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    <TextView-->
-
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:fontFamily="@font/arial_bold"-->
-                <!--                        android:text="Your number phone:" />-->
-
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/tv_phone"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginLeft="20dp"-->
-                <!--                        android:fontFamily="@font/cochin"-->
-                <!--                        android:text="Your number phone" />-->
-                <!--                </LinearLayout>-->
-
-
-                <!--                <Button-->
-                <!--                    android:id="@+id/btn_logout"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="center"-->
-                <!--                    android:layout_marginTop="30dp"-->
-                <!--                    android:background="@drawable/button_circle"-->
-                <!--                    android:text="Logout" />-->
-
-                <!--                <Button-->
-                <!--                    android:id="@+id/btn_reset"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginTop="10dp"-->
-                <!--                    android:background="@drawable/button_circle"-->
-                <!--                    android:text="Reset password" />-->
-
-
-                <!--                </LinearLayout>-->
-            </LinearLayout>
-
-        </ScrollView>
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/arial_bold"
-            android:gravity="center"
-            android:text="Your name"
-            android:textSize="20sp" />
-
-
-        <TextView
-            android:id="@+id/tv_email"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Thêm giới thiệu bản thân" />
-
-        <TextView
-            android:id="@+id/tv_phone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Thêm giới thiệu bản thân" />
-
-        <TextView
-            android:id="@+id/tv_verify_msg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="ban chua nhan duoc ma" />
-
-        <TextView
-            android:id="@+id/tv_resend_code"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="gui code" />
-
-
+                android:id="@+id/btn_update_photo"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_baseline_send_24"
+                android:textAllCaps="false"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="481dp"
+            android:orientation="vertical">
 
-
-
-            <Button
-                android:id="@+id/btn_logout"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/arial_bold"
+                android:gravity="center"
+                android:text="Trương ngọc thươm" />
+
+            <ImageButton
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
-                android:background="@drawable/button_circle"
-                android:text="Logout" />
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_baseline_edit_24" />
 
-            <Button
-                android:id="@+id/btn_reset"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_circle"
-                android:text="Reset password" />
+                android:orientation="horizontal">
 
+
+                <LinearLayout
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ảnh" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/arial_bold"
+                        android:text="1234" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ảnh" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/arial_bold"
+                        android:text="1234" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ảnh" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/arial_bold"
+                        android:text="1234" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                />
         </LinearLayout>
 
-
     </LinearLayout>
-
-
 </ScrollView>
+
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginTop="20dp"-->
+    <!--                    android:orientation="horizontal">-->
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:fontFamily="@font/arial_bold"-->
+    <!--                        android:text="Your email:" />-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/tv_email"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginLeft="20dp"-->
+    <!--                        android:fontFamily="@font/cochin"-->
+    <!--                        android:text="Youryour email" />-->
+    <!--                </LinearLayout>-->
+
+
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginTop="15dp"-->
+    <!--                    android:orientation="horizontal">-->
+
+    <!--                    <TextView-->
+
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:fontFamily="@font/arial_bold"-->
+    <!--                        android:text="Your name:" />-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/tv_name"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginLeft="20dp"-->
+    <!--                        android:fontFamily="@font/cochin"-->
+    <!--                        android:text="Your name" />-->
+    <!--                </LinearLayout>-->
+
+    <!--                <LinearLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginTop="15dp"-->
+    <!--                    android:orientation="horizontal">-->
+
+    <!--                    <TextView-->
+
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:fontFamily="@font/arial_bold"-->
+    <!--                        android:text="Your number phone:" />-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/tv_phone"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginLeft="20dp"-->
+    <!--                        android:fontFamily="@font/cochin"-->
+    <!--                        android:text="Your number phone" />-->
+    <!--                </LinearLayout>-->
+
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/btn_logout"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_gravity="center"-->
+    <!--                    android:layout_marginTop="30dp"-->
+    <!--                    android:background="@drawable/button_circle"-->
+    <!--                    android:text="Logout" />-->
+
+    <!--                <Button-->
+    <!--                    android:id="@+id/btn_reset"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginTop="10dp"-->
+    <!--                    android:background="@drawable/button_circle"-->
+    <!--                    android:text="Reset password" />-->
+
+
+    <!--                </LinearLayout>-->

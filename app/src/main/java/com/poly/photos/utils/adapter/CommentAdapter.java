@@ -52,32 +52,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     @Override
     public void onBindViewHolder(@NonNull CommentAdapter.CommentViewholder holder, int position) {
-         final Comment comment= commentList.get(position);
+        final Comment comment = commentList.get(position);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        getInforUser(holder.ivAvartar,holder.tvUserName,comment.getPublisher());
+        getUserInfo(holder.ivAvartar, holder.tvUserName, comment.getPublisher());
         holder.tvComment.setText(comment.getComment());
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users")
-                .child(comment.getPublisher());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
-                holder.tvUserName.setText(user.getName());
-                StorageReference avartar = FirebaseStorage.getInstance().getReference().child("photo").child(comment.getPublisher() + "avartar.jpg");
-                avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.with(context).load(uri)
-                                .into(holder.ivAvartar);
-                    }
-                });
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
     }
 
     @Override
@@ -97,4 +77,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         }
     }
 
+    private void getUserInfo(final ImageView imageView, final TextView username, String publisherid) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("users").child(publisherid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Picasso.with(context).load(user.getAvartar()).into(imageView);
+                username.setText(user.getName());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

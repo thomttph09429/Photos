@@ -5,6 +5,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
@@ -17,9 +18,15 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
+import com.poly.photos.model.User;
 import com.poly.photos.view.dialog.PostDialog;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -63,15 +70,30 @@ public class CreatePostFragment extends Fragment implements View.OnClickListener
     }
 
     private void getAvartar() {
-        StorageReference avartar = storageReference.child("photo").child(auth.getCurrentUser().getUid() + "avartar.jpg");
-        avartar.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.with(getContext()).load(uri)
-                        .fit().centerCrop()
-                        .into(ivAvartar);
-            }
-        });
+        if (auth.getCurrentUser() != null) {
+            DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid());
+
+            profile.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    User user = snapshot.getValue(User.class);
+                    if (user.getAvartar().equals("default")) {
+                        ivAvartar.setImageResource(R.drawable.sky);
+                    } else {
+                        Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
 
 
     }

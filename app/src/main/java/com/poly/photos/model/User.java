@@ -1,10 +1,10 @@
 package com.poly.photos.model;
 
 public class User {
+    private String cover;
     private String avartar;
     private String name;
     private String email;
-    private String cover;
     private String phone;
     private String id;
     public String getAvartar() {
@@ -31,11 +31,22 @@ public class User {
         this.email = email;
     }
 
-    public String getCover() {
-        return cover;
-    }
 
     public User() {
+    }
+
+
+    public User(String cover, String avartar, String name, String email, String phone, String id) {
+        this.cover = cover;
+        this.avartar = avartar;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.id = id;
+    }
+
+    public String getCover() {
+        return cover;
     }
 
     public void setCover(String cover) {
@@ -46,14 +57,7 @@ public class User {
         return phone;
     }
 
-    public User(String avartar, String name, String email, String cover, String phone, String id) {
-        this.avartar = avartar;
-        this.name = name;
-        this.email = email;
-        this.cover = cover;
-        this.phone = phone;
-        this.id = id;
-    }
+
 
     public String getId() {
         return id;

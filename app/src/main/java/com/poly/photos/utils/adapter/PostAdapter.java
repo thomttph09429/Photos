@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.R;
 import com.poly.photos.model.Post;
+import com.poly.photos.model.User;
 import com.poly.photos.view.activity.CommentActivity;
 import com.squareup.picasso.Picasso;
 
@@ -56,30 +57,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final Post post = postList.get(position);
         holder.tvState.setText(post.getDescription());
-        holder.tvUserName.setText(post.getUserName());
+        Picasso.with(context).load(post.getPostimage()).placeholder(R.drawable.ic_account_circle_24).fit().centerCrop().into(holder.ivPhoto);
 
+        publisherInfor(holder.ivAvartar, holder.tvUserName, post.getPublisher());
+
+        Log.e("thah cong", "thânhhhhh" + post.getPostid());
 //       Navigation.createNavigateOnClickListener(R.id.action_home_to_action_comment).onClick(holder.iv_comment);
 //        Navigation.findNavController(view).navigate(R.id.action_home_to_action_comment, bundle);
 
-        holder.itemView.setOnClickListener(v ->
+        holder.iv_comment.setOnClickListener(v ->
         {
             Intent intent = new Intent(context, CommentActivity.class);
             intent.putExtra("postId", post.getPostid());
             intent.putExtra("publisherId", post.getPublisher());
             context.startActivity(intent);
         });
-//        holder.iv_comment.setOnClickListener(v ->
-//        {
-//            Intent intent = new Intent(context, CommentActivity.class);
-//            intent.putExtra("postId", post.getPostid());
-//            intent.putExtra("publisherId", post.getPublisher());
-//            context.startActivity(intent);
-//        });
+//
 
-        Picasso.with(context).load(post.getPostimage()).placeholder(R.drawable.ic_account_circle_24).fit().centerCrop().into(holder.ivPhoto);
-        Picasso.with(context).load(post.getAvartar())
-                .placeholder(R.drawable.portrait)
-                .into(holder.ivAvartar);
 
         getComment(post.getPostid(), holder.iv_comment);
 
@@ -138,6 +132,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             iv_share = itemView.findViewById(R.id.iv_share);
 
         }
+    }
+
+    private void publisherInfor(ImageView ivAvartar, TextView tvUsername, String userId) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                tvUsername.setText(user.getName());
+                Picasso.with(context).load(user.getAvartar()).into(ivAvartar);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void isLikes(String postId, ImageView imageView) {
