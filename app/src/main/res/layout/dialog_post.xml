@@ -57,7 +57,7 @@
                 android:visibility="gone"
                 android:id="@+id/iv_photo"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="500dp"
                 android:maxHeight="350dp"
                 />
 

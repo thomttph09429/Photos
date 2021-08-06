@@ -60,6 +60,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/arial_bold"
@@ -92,6 +93,8 @@
                         android:text="Ảnh" />
 
                     <TextView
+                        android:textSize="19dp"
+                        android:id="@+id/tv_all_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
@@ -109,6 +112,9 @@
                         android:text="Ảnh" />
 
                     <TextView
+                        android:textSize="19dp"
+
+                        android:id="@+id/tv_all_follows"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
@@ -127,6 +133,8 @@
                         android:text="Ảnh" />
 
                     <TextView
+                        android:textSize="19dp"
+                        android:id="@+id/tv_all_following"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
@@ -137,6 +145,7 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rc_all_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
@@ -145,90 +154,3 @@
 
     </LinearLayout>
 </ScrollView>
-
-    <!--                <LinearLayout-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_marginTop="20dp"-->
-    <!--                    android:orientation="horizontal">-->
-
-    <!--                    <TextView-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:fontFamily="@font/arial_bold"-->
-    <!--                        android:text="Your email:" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:id="@+id/tv_email"-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:layout_marginLeft="20dp"-->
-    <!--                        android:fontFamily="@font/cochin"-->
-    <!--                        android:text="Youryour email" />-->
-    <!--                </LinearLayout>-->
-
-
-    <!--                <LinearLayout-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_marginTop="15dp"-->
-    <!--                    android:orientation="horizontal">-->
-
-    <!--                    <TextView-->
-
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:fontFamily="@font/arial_bold"-->
-    <!--                        android:text="Your name:" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:id="@+id/tv_name"-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:layout_marginLeft="20dp"-->
-    <!--                        android:fontFamily="@font/cochin"-->
-    <!--                        android:text="Your name" />-->
-    <!--                </LinearLayout>-->
-
-    <!--                <LinearLayout-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_marginTop="15dp"-->
-    <!--                    android:orientation="horizontal">-->
-
-    <!--                    <TextView-->
-
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:fontFamily="@font/arial_bold"-->
-    <!--                        android:text="Your number phone:" />-->
-
-    <!--                    <TextView-->
-    <!--                        android:id="@+id/tv_phone"-->
-    <!--                        android:layout_width="wrap_content"-->
-    <!--                        android:layout_height="wrap_content"-->
-    <!--                        android:layout_marginLeft="20dp"-->
-    <!--                        android:fontFamily="@font/cochin"-->
-    <!--                        android:text="Your number phone" />-->
-    <!--                </LinearLayout>-->
-
-
-    <!--                <Button-->
-    <!--                    android:id="@+id/btn_logout"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_gravity="center"-->
-    <!--                    android:layout_marginTop="30dp"-->
-    <!--                    android:background="@drawable/button_circle"-->
-    <!--                    android:text="Logout" />-->
-
-    <!--                <Button-->
-    <!--                    android:id="@+id/btn_reset"-->
-    <!--                    android:layout_width="match_parent"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:layout_marginTop="10dp"-->
-    <!--                    android:background="@drawable/button_circle"-->
-    <!--                    android:text="Reset password" />-->
-
-
-    <!--                </LinearLayout>-->

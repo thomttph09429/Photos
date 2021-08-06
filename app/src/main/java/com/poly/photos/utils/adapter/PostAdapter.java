@@ -61,7 +61,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
         publisherInfor(holder.ivAvartar, holder.tvUserName, post.getPublisher());
 
-        Log.e("thah cong", "thânhhhhh" + post.getPostid());
 //       Navigation.createNavigateOnClickListener(R.id.action_home_to_action_comment).onClick(holder.iv_comment);
 //        Navigation.findNavController(view).navigate(R.id.action_home_to_action_comment, bundle);
 
@@ -72,7 +71,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             intent.putExtra("publisherId", post.getPublisher());
             context.startActivity(intent);
         });
-//
+
 
 
         getComment(post.getPostid(), holder.iv_comment);

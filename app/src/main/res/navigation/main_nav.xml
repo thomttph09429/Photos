@@ -69,5 +69,11 @@
         app:destination="@+id/action_home"
         />
     </fragment>
+    <fragment
+        android:id="@+id/action_setting"
+        android:name="com.poly.photos.view.fragment.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting">
 
+    </fragment>
 </navigation>

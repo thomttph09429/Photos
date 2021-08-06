@@ -19,6 +19,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.poly.photos.view.activity.MyAccountActivity;
 import com.poly.photos.view.fragment.HomeFragment;
 import com.poly.photos.view.fragment.SearchFragment;
@@ -55,8 +57,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                else if (destination.getId() == R.id.action_account) {
                     toolbar.setVisibility(View.GONE);
+                    SharedPreferences.Editor editor = getSharedPreferences("name", MODE_PRIVATE).edit();
+                    editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    editor.apply();
+                }
 
-                } else {
+               else {
                     toolbar.setVisibility(View.VISIBLE);
                 }
             }
@@ -85,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.action_serach);
                 return true;
             case R.id.setting:
+               navController.navigate(R.id.action_setting);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

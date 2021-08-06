@@ -2,13 +2,18 @@ package com.poly.photos.view.dialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,15 +40,26 @@ public class ResetPwDialog extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_reset_pw);
-        edtNewPw = findViewById(R.id.edt_new_pw);
-        btnOk = findViewById(R.id.btn_ok);
-        btnCancel = findViewById(R.id.btn_cancel);
+
+        initViews();
+        initActions();
+    }
+
+    private void initActions() {
         btnOk.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+
     }
+
+    private void initViews() {
+        edtNewPw = findViewById(R.id.edt_new_pw);
+        btnOk = findViewById(R.id.btn_ok);
+        btnCancel = findViewById(R.id.btn_cancel);
+    }
+
 
     @Override
     public void onClick(View v) {

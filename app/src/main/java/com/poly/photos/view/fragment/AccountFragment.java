@@ -3,6 +3,7 @@ package com.poly.photos.view.fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -13,6 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,30 +54,34 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.poly.photos.R;
+import com.poly.photos.model.Post;
 import com.poly.photos.model.User;
 import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.utils.ProgressBarDialog;
+import com.poly.photos.utils.adapter.MyPhotoAdapter;
 import com.poly.photos.view.activity.LoginActivity;
 import com.poly.photos.view.activity.MyAccountActivity;
 import com.poly.photos.view.dialog.ResetPwDialog;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 import static com.poly.photos.utils.GlobalUtils.MY_CAMERA_UPDATE_COVERPHOTO;
 import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
-
-    private Button btnLogout, btnResetPw;
-    private TextView tvEmai, tvPhone, tvName, btnResendCode, tvMsg;
+    private TextView tvAllPhoto, tvAllFollows, tvAllFollowing, tvName;
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private StorageReference storageReference;
@@ -87,6 +95,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     private View view;
     private StorageReference storageRef;
     private StorageTask uploadTask;
+    private String profileid;
+    private List<Post> postList;
+    private MyPhotoAdapter myPhotoAdapter;
+    private RecyclerView rcMyPhoto;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,13 +118,17 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         initAction();
 //        showInfor();
         showImage();
+        nPost();
+        getMyPost();
+        SharedPreferences prefs = getContext().getSharedPreferences("name", MODE_PRIVATE);
+        profileid = prefs.getString("profileid", "none");
+        Log.e("thanh cong", "thnah cong" + profileid);
     }
 
     public void initAction() {
 
-//        btnLogout.setOnClickListener(this);
-//        btnResendCode.setOnClickListener(this);
-//        btnResetPw.setOnClickListener(this);
+
+        postList = new ArrayList<>();
         ib_select_avartar.setOnClickListener(this);
         btnUpdateAvartar.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
@@ -119,57 +136,32 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageRef = FirebaseStorage.getInstance().getReference("uploads");
+        LinearLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+        rcMyPhoto.setLayoutManager(layoutManager);
+        myPhotoAdapter = new MyPhotoAdapter(postList, getContext());
+        rcMyPhoto.setAdapter(myPhotoAdapter);
+
 
     }
 
     public void initViews() {
-//        btnLogout = view.findViewById(R.id.btn_logout);
-//        tvEmai = view.findViewById(R.id.tv_email);
-//        tvName = view.findViewById(R.id.tv_name);
-//        tvPhone = view.findViewById(R.id.tv_phone);
-//        btnResendCode = view.findViewById(R.id.tv_resend_code);
-//        tvMsg = view.findViewById(R.id.tv_verify_msg);
-//        btnResetPw = view.findViewById(R.id.btn_reset);
+        tvName = view.findViewById(R.id.tv_name);
         ivAvartar = view.findViewById(R.id.iv_avartar);
         ivCover = view.findViewById(R.id.iv_cover);
         ib_select_avartar = view.findViewById(R.id.ib_select_avartar);
         btnUpdateAvartar = view.findViewById(R.id.btn_update_photo);
+        rcMyPhoto = view.findViewById(R.id.rc_all_photo);
+        tvAllFollowing = view.findViewById(R.id.tv_all_following);
+        tvAllFollows = view.findViewById(R.id.tv_all_follows);
+        tvAllPhoto = view.findViewById(R.id.tv_all_photo);
+
     }
 
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        showInfor();
-//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.btn_reset:
-//                ResetPwDialog dialog = new ResetPwDialog(getContext());
-//                dialog.show();
-//                break;
-//            case R.id.btn_logout:
-//                auth.signOut();
-//                Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                startActivity(intent);
-//                getActivity().finish();
-//
-//                break;
-//            case R.id.tv_resend_code:
-//                FirebaseUser firebaseUser = auth.getCurrentUser();
-//                firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Toast.makeText(v.getContext(), "Verification email has been sent", Toast.LENGTH_LONG).show();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e("Reristor", "Onfailure: Email not sent" + e.getMessage());
-//                    }
-//                });
-//                break;
+
             case R.id.ib_select_avartar:
                 chooseUpdate();
                 break;
@@ -223,40 +215,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     }
 
-//    public void showInfor() {
-//        FirebaseUser user = auth.getCurrentUser();
-//        if (user!=null){
-//            userID = auth.getCurrentUser().getUid();
-//            if (!user.isEmailVerified()) {
-//                btnResendCode.setVisibility(View.VISIBLE);
-//                tvMsg.setVisibility(View.VISIBLE);
-//            }
-//            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
-//            ref.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    if (snapshot.exists()) {
-//                        String name = snapshot.child("name").getValue(String.class);
-//                        String email = snapshot.child("email").getValue(String.class);
-//                        String phone = snapshot.child("phone").getValue(String.class);
-//
-//                        tvEmai.setText(email);
-//                        tvPhone.setText(phone);
-//                        tvName.setText(name);
-//
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-//        }
 
-
-    //    }
     private void showImage() {
         if (auth.getCurrentUser() != null) {
             DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(auth.getCurrentUser().getUid());
@@ -265,6 +224,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
+                    tvName.setText(user.getName());
                     if (user.getAvartar().equals("default")) {
                         ivAvartar.setImageResource(R.drawable.sky);
                     } else {
@@ -294,12 +254,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         ProgressBarDialog.getInstance(getContext()).showDialog("Please wait..", getContext());
     }
 
-//    private String getFileExtension(Uri uri) {
-//        ContentResolver cR = getContext().getContentResolver();
-//        MimeTypeMap mime = MimeTypeMap.getSingleton();
-//        return mime.getExtensionFromMimeType(cR.getType(uri));
-//
-//    }
 
     private void upLoadImage() {
 
@@ -342,9 +296,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 }
             });
 
-        }else {
-            Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
-
         }
         if (uriCover != null) {
             StorageReference fileReference = storageRef.child(auth.getCurrentUser().getUid() + "cover.jpg");
@@ -383,12 +334,56 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 public void onFailure(@NonNull Exception e) {
                 }
             });
-        }else {
-            Toast.makeText(getContext(), "No image selected", Toast.LENGTH_SHORT).show();
-
         }
     }
 
+    private void nPost() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int i = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Post post = snapshot.getValue(Post.class);
+                    if (post.getPublisher().equals(profileid)) {
+                        i++;
+                    }
+                }
+                tvAllPhoto.setText("" + i);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getMyPost() {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for (DataSnapshot dsnapshot : snapshot.getChildren()) {
+                    Post post = dsnapshot.getValue(Post.class);
+                    if (post.getPublisher().equals(profileid)) {
+                        postList.add(post);
+                    }
+                }
+                Collections.reverse(postList);
+                myPhotoAdapter.notifyDataSetChanged();
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

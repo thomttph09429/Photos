@@ -57,7 +57,7 @@
             <ImageView
                 android:id="@+id/iv_photo"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="500dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -79,7 +79,6 @@
                 android:layout_marginLeft="4dp"
                 android:layout_width="30sp"
                 android:layout_height="25dp"
-                android:text="10"
                 />
 
             <ImageView
@@ -93,7 +92,6 @@
                 android:layout_marginLeft="4dp"
                 android:layout_width="30sp"
                 android:layout_height="25dp"
-                android:text="10"
                 />
             <ImageView
                 android:id="@+id/iv_comment"
@@ -106,7 +104,6 @@
                 android:layout_marginLeft="4dp"
                 android:layout_width="30sp"
                 android:layout_height="25dp"
-                android:text="10"
                 />
 
             <ImageView
