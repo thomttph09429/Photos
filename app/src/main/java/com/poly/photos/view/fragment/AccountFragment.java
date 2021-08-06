@@ -1,18 +1,12 @@
 package com.poly.photos.view.fragment;
 
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,19 +16,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,12 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -59,18 +43,12 @@ import com.poly.photos.model.User;
 import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.utils.ProgressBarDialog;
 import com.poly.photos.utils.adapter.MyPhotoAdapter;
-import com.poly.photos.view.activity.LoginActivity;
-import com.poly.photos.view.activity.MyAccountActivity;
-import com.poly.photos.view.dialog.ResetPwDialog;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -82,14 +60,14 @@ import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
     private TextView tvAllPhoto, tvAllFollows, tvAllFollowing, tvName;
-    private FirebaseFirestore firestore;
     private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private String userID;
     private ImageView ivCover;
     private CircleImageView ivAvartar;
-    private ImageButton ib_select_avartar, btnUpdateAvartar;
+    private ImageButton ib_select_avartar, btnUpdateAvartar, ibEdit;
     private Uri uriAvartar;
     private Uri uriCover;
     private View view;
@@ -116,7 +94,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
         initViews();
         initAction();
-//        showInfor();
         showImage();
         nPost();
         getMyPost();
@@ -132,7 +109,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         ib_select_avartar.setOnClickListener(this);
         btnUpdateAvartar.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
-        firestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageRef = FirebaseStorage.getInstance().getReference("uploads");
@@ -145,6 +121,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     }
 
     public void initViews() {
+        ibEdit = view.findViewById(R.id.ib_edit);
         tvName = view.findViewById(R.id.tv_name);
         ivAvartar = view.findViewById(R.id.iv_avartar);
         ivCover = view.findViewById(R.id.iv_cover);

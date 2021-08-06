@@ -5,11 +5,11 @@
         android:id="@+id/search"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_baseline_search_24"
-        android:iconTint="@color/white"
-        android:title="Profile">
+        android:iconTint="@color/background_4"
+        android:title="Search">
     </item>
     <item
-        android:iconTint="@color/white"
+        android:iconTint="@color/background_3"
         android:id="@+id/setting"
         android:icon="@drawable/ic_baseline_settings_24"
         app:showAsAction="ifRoom|withText"

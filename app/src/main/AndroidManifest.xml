@@ -14,12 +14,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Photos">
-        <activity android:name=".view.activity.CommentActivity"></activity>
+        android:theme="@style/myStyle">
+        <activity android:name=".view.activity.MessageActivity"></activity>
+        <activity android:name=".view.activity.CommentActivity" />
         <activity android:name=".view.activity.LoginActivity" />
-        <activity
-            android:name=".view.activity.MyAccountActivity"
-            android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".view.activity.RegisterActivity">
             <intent-filter>

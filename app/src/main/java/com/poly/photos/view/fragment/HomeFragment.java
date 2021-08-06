@@ -36,7 +36,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private View view;
     private PostAdapter postAdapter;
-    private ProgressBar progressBar;
     private StorageReference storageReference;
     private FirebaseAuth auth;
     private List<Post> postList;
@@ -77,7 +76,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void initViews() {
 
         recyclerView = view.findViewById(R.id.rv_post);
-        progressBar = view.findViewById(R.id.progress_bar);
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();

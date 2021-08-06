@@ -7,7 +7,6 @@
     android:layout_height="match_parent">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,25 +32,7 @@
                 android:backgroundTint="@color/purple_500"
                 android:src="@drawable/portrait" />
 
-            <ImageButton
-                android:id="@+id/ib_select_avartar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/ic_baseline_photo_camera_24" />
 
-            <ImageButton
-
-                android:id="@+id/btn_update_photo"
-                android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_baseline_send_24"
-                android:textAllCaps="false"
-                android:visibility="gone" />
         </RelativeLayout>
 
         <LinearLayout
@@ -66,15 +47,6 @@
                 android:fontFamily="@font/arial_bold"
                 android:gravity="center"
                 android:text="Trương ngọc thươm" />
-
-            <ImageButton
-                android:visibility="gone"
-                android:id="@+id/ib_edit"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_edit_24" />
 
 
             <LinearLayout
@@ -95,12 +67,12 @@
                         android:text="Ảnh" />
 
                     <TextView
-                        android:textSize="19dp"
                         android:id="@+id/tv_all_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234" />
+                        android:text="1234"
+                        android:textSize="19dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -114,13 +86,13 @@
                         android:text="Ảnh" />
 
                     <TextView
-                        android:textSize="19dp"
-
                         android:id="@+id/tv_all_follows"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234" />
+                        android:text="1234"
+                        android:textSize="19dp" />
 
                 </LinearLayout>
 
@@ -135,23 +107,40 @@
                         android:text="Ảnh" />
 
                     <TextView
-                        android:textSize="19dp"
                         android:id="@+id/tv_all_following"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234" />
+                        android:text="1234"
+                        android:textSize="19dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rc_all_photo"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                />
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rc_all_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp" />
+
+                <Button
+                    android:textAllCaps="false"
+                    android:layout_width="120dp"
+                    android:padding="11dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/chat_right"
+                    android:drawableLeft="@drawable/ic_baseline_message_24"
+                    android:text="Nhắn tin" />
+
+            </RelativeLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>

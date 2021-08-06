@@ -2,23 +2,14 @@ package com.poly.photos;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,9 +19,6 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.poly.photos.view.activity.MyAccountActivity;
-import com.poly.photos.view.fragment.HomeFragment;
-import com.poly.photos.view.fragment.SearchFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         activity = this;
 
+
         navigation = findViewById(R.id.navigation);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navigation, navController);
@@ -54,15 +43,17 @@ public class MainActivity extends AppCompatActivity {
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 if (destination.getId() == R.id.action_serach) {
                     toolbar.setVisibility(View.GONE);
-                }
-               else if (destination.getId() == R.id.action_account) {
+                } else if (destination.getId() == R.id.action_account) {
                     toolbar.setVisibility(View.GONE);
                     SharedPreferences.Editor editor = getSharedPreferences("name", MODE_PRIVATE).edit();
                     editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                     editor.apply();
-                }
 
-               else {
+                } else if (destination.getId() == R.id.action_profile) {
+
+                    toolbar.setVisibility(View.GONE);
+
+                } else {
                     toolbar.setVisibility(View.VISIBLE);
                 }
             }
@@ -91,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.action_serach);
                 return true;
             case R.id.setting:
-               navController.navigate(R.id.action_setting);
+                navController.navigate(R.id.action_setting);
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

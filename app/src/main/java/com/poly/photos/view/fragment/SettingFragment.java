@@ -92,7 +92,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 getActivity().finish();
 
                 break;
-            case R.id.tv_resend_code:
+//            case R.id.tv_resend_code:
 //                FirebaseUser firebaseUser = auth.getCurrentUser();
 //                firebaseUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
 //                    @Override

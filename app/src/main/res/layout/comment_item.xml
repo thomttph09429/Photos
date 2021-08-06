@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
-            android:background="@drawable/border"
+            android:background="@drawable/background_comment"
             >
             <TextView
                 android:fontFamily="@font/arial_bold"

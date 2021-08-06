@@ -3,6 +3,7 @@ package com.poly.photos.utils.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder> {
     private Context context;
     private List<Post> postList;
@@ -56,8 +59,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
     public void onBindViewHolder(@NonNull PostAdapter.PostViewholder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final Post post = postList.get(position);
-        holder.tvState.setText(post.getDescription());
-        Picasso.with(context).load(post.getPostimage()).placeholder(R.drawable.ic_account_circle_24).fit().centerCrop().into(holder.ivPhoto);
+        if (post.getDescription().equals("")) {
+            holder.tvState.setVisibility(View.GONE);
+        } else {
+            holder.tvState.setVisibility(View.VISIBLE);
+            holder.tvState.setText(post.getDescription());
+
+        }
+        Picasso.with(context).load(post.getPostimage()).fit().centerCrop().into(holder.ivPhoto);
 
         publisherInfor(holder.ivAvartar, holder.tvUserName, post.getPublisher());
 
@@ -71,8 +80,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             intent.putExtra("publisherId", post.getPublisher());
             context.startActivity(intent);
         });
+        holder.ivPhoto.setOnClickListener(v -> {
 
+        });
 
+        holder.tvUserName.setOnClickListener(v -> {
+
+            if (post.getPublisher().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                Navigation.createNavigateOnClickListener(R.id.action_account).onClick(holder.iv_comment);
+
+            } else {
+                SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
+                editor.putString("profileid", post.getPublisher());
+                editor.apply();
+                Navigation.createNavigateOnClickListener(R.id.action_profile).onClick(holder.iv_comment);
+
+            }
+
+        });
 
         getComment(post.getPostid(), holder.iv_comment);
 

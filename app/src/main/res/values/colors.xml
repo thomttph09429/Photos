@@ -13,6 +13,11 @@
     <color name="pink_200">#F199C9</color>
     <color name="clear">#DFDFDF</color>
     <color name="color_dialog">#00ffffff</color>
-    <color name="colorGrey">#dddddd</color>
+    <color name="background_0">#000000</color>
+    <color name="background_1">#111111</color>
+    <color name="background_2">#222222</color>
+    <color name="background_3">#333333</color>
+    <color name="background_4">#444444</color>
 
+    <color name="colorGrey">#dddddd</color>
 </resources>

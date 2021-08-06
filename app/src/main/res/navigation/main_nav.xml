@@ -14,12 +14,11 @@
             android:id="@+id/action_home_to_action_comment"
             app:destination="@+id/action_comment"
             />
-        <argument
-            android:name="postId"
-            app:argType="string" />
-        <argument
-            android:name="publisherId"
-            app:argType="string" />
+
+        <action
+            android:id="@+id/action_home_to_action_account"
+            app:destination="@+id/action_account"
+            />
 
 
     </fragment>
@@ -74,6 +73,13 @@
         android:name="com.poly.photos.view.fragment.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting">
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_profile"
+        android:name="com.poly.photos.view.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
 
     </fragment>
 </navigation>

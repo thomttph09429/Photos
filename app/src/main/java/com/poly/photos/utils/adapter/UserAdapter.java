@@ -1,6 +1,8 @@
 package com.poly.photos.utils.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.R;
 import com.poly.photos.model.User;
+import com.poly.photos.view.activity.MessageActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -62,6 +65,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
             holder.btnFollow.setVisibility(View.GONE);
 
         }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent=new Intent(context, MessageActivity.class);
+            intent.putExtra("userId", user.getId());
+            context.startActivity(intent);
+
+        });
 
 
 
