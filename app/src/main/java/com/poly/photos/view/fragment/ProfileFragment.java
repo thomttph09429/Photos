@@ -1,5 +1,6 @@
 package com.poly.photos.view.fragment;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import com.poly.photos.R;
 import com.poly.photos.model.Post;
 import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.MyPhotoAdapter;
+import com.poly.photos.view.activity.MessageActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,10 +46,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView tvAllPhoto, tvAllFollows, tvAllFollowing, tvName;
     private FirebaseUser firebaseUser;
-
+    private Button btnSendMessage;
     private ImageView ivCover;
     private CircleImageView ivAvartar;
     private View view;
@@ -62,7 +65,7 @@ public class ProfileFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_profile, container, false);
         SharedPreferences prefs = getContext().getSharedPreferences("name", MODE_PRIVATE);
         profileid = prefs.getString("profileid", "none");
-        Log.e("thanh cong", "fff"+profileid);
+        Log.e("thanh cong", "fff" + profileid);
         return view;
     }
 
@@ -77,18 +80,6 @@ public class ProfileFragment extends Fragment {
         getMyPost();
 
     }
-
-    public void initAction() {
-        postList = new ArrayList<>();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        LinearLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
-        rcMyPhoto.setLayoutManager(layoutManager);
-        myPhotoAdapter = new MyPhotoAdapter(postList, getContext());
-        rcMyPhoto.setAdapter(myPhotoAdapter);
-
-
-    }
-
     public void initViews() {
         tvName = view.findViewById(R.id.tv_name);
         ivAvartar = view.findViewById(R.id.iv_avartar);
@@ -97,36 +88,55 @@ public class ProfileFragment extends Fragment {
         tvAllFollowing = view.findViewById(R.id.tv_all_following);
         tvAllFollows = view.findViewById(R.id.tv_all_follows);
         tvAllPhoto = view.findViewById(R.id.tv_all_photo);
+        btnSendMessage= view.findViewById(R.id.btn_send_message);
+
+    }
+    public void initAction() {
+        postList = new ArrayList<>();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        LinearLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+        rcMyPhoto.setLayoutManager(layoutManager);
+        myPhotoAdapter = new MyPhotoAdapter(postList, getContext());
+        rcMyPhoto.setAdapter(myPhotoAdapter);
+        btnSendMessage.setOnClickListener(this);
+
+
+    }
+    private void sendMesage() {
+        Intent intent= new Intent(getContext(), MessageActivity.class);
+        intent.putExtra("userId",profileid );
+        startActivity(intent);
+
 
     }
 
+
     private void showImage() {
-            DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(profileid);
+        DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(profileid);
 
-            profile.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    User user = snapshot.getValue(User.class);
-                    tvName.setText(user.getName());
-                    if (user.getAvartar().equals("default")) {
-                        ivAvartar.setImageResource(R.drawable.sky);
-                    } else {
-                        Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
-
-                    }
-                    Picasso.with(getContext()).load(user.getCover()).fit().centerCrop().into(ivCover);
-
+        profile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                tvName.setText(user.getName());
+                if (user.getAvartar().equals("default")) {
+                    ivAvartar.setImageResource(R.drawable.sky);
+                } else {
+                    Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
 
                 }
+                Picasso.with(getContext()).load(user.getCover()).fit().centerCrop().into(ivCover);
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
+            }
 
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+    }
 
 
     private void nPost() {
@@ -176,4 +186,15 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_send_message:
+                sendMesage();
+        }
+
+    }
+
+
 }

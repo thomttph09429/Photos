@@ -2,6 +2,7 @@ package com.poly.photos.view.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.poly.photos.MainActivity;
 import com.poly.photos.R;
 import com.poly.photos.model.Comment;
 import com.poly.photos.model.User;
@@ -39,7 +41,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CommentActivity extends AppCompatActivity {
+public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton ibSend;
     private CircleImageView ivAvartar;
     private EditText edtComment;
@@ -59,27 +61,23 @@ public class CommentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comment);
         overridePendingTransition(R.anim.activity_slide_from_bottom, R.anim.stay);
 
-        setTitle("Comments");
         initViews();
         initActions();
         getAvartar();
         readComment();
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
+
         Intent intent = getIntent();
         postId = intent.getStringExtra("postId");
         publisherId = intent.getStringExtra("publisherId");
 
-        ibSend.setOnClickListener(v -> {
-
-            if (edtComment.getText().toString().equals("")) {
-                Toast.makeText(CommentActivity.this, "Viết gì đó đi", Toast.LENGTH_SHORT).show();
-            } else {
-                addComment();
-                readComment();
-
-            }
-            edtComment.setText("");
-        });
     }
 
     private void initViews() {
@@ -168,7 +166,7 @@ public class CommentActivity extends AppCompatActivity {
 
 
                         }
-                    }, 3000);
+                    }, 1000);
 
                 }
 
@@ -182,6 +180,16 @@ public class CommentActivity extends AppCompatActivity {
 
 
     }
+    private void sendComment(){
+        if (edtComment.getText().toString().equals("")) {
+            Toast.makeText(CommentActivity.this, "Viết gì đó đi", Toast.LENGTH_SHORT).show();
+        } else {
+            addComment();
+            readComment();
+
+        }
+        edtComment.setText("");
+    }
 
     @Override
     public void onBackPressed() {
@@ -190,4 +198,12 @@ public class CommentActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ib_send:
+           sendComment();
+        }
+
+    }
 }

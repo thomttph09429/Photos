@@ -31,7 +31,7 @@
         <item name="android:background">@android:color/transparent</item>
 
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondary">@color/purple_500</item>
         <item name="colorSecondaryVariant">@color/background_3</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->

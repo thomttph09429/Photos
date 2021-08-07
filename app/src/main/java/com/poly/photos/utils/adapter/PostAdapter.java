@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,7 +50,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
     @NonNull
     @Override
     public PostAdapter.PostViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false);
         return new PostAdapter.PostViewholder(view);
     }
 
@@ -80,6 +79,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             intent.putExtra("publisherId", post.getPublisher());
             context.startActivity(intent);
         });
+        holder.lSelect.setOnClickListener(v ->
+        {
+            Intent intent = new Intent(context, CommentActivity.class);
+            intent.putExtra("postId", post.getPostid());
+            intent.putExtra("publisherId", post.getPublisher());
+            context.startActivity(intent);
+        });
         holder.ivPhoto.setOnClickListener(v -> {
 
         });
@@ -99,6 +105,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             }
 
         });
+        holder.ivAvartar.setOnClickListener(v -> {
+
+            if (post.getPublisher().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                Navigation.createNavigateOnClickListener(R.id.action_account).onClick(holder.iv_comment);
+
+            } else {
+                SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
+                editor.putString("profileid", post.getPublisher());
+                editor.apply();
+                Navigation.createNavigateOnClickListener(R.id.action_profile).onClick(holder.iv_comment);
+
+            }
+
+        });
+
+
 
         getComment(post.getPostid(), holder.iv_comment);
 
@@ -140,6 +163,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
     public class PostViewholder extends RecyclerView.ViewHolder {
         TextView tvState, tvUserName, tv_like, tv_comment, tv_care;
         ImageView ivPhoto, iv_like, iv_comment, iv_share, iv_care;
+        LinearLayout lSelect;
         CircleImageView ivAvartar;
 
         public PostViewholder(View itemView) {
@@ -155,6 +179,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             iv_comment = itemView.findViewById(R.id.iv_comment);
             tv_comment = itemView.findViewById(R.id.tv_comment);
             iv_share = itemView.findViewById(R.id.iv_share);
+            lSelect = itemView.findViewById(R.id.select);
 
         }
     }

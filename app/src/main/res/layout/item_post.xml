@@ -62,6 +62,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -83,7 +84,7 @@
                 />
 
             <ImageView
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="7dp"
                 android:id="@+id/iv_like"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -98,7 +99,7 @@
                 android:id="@+id/iv_comment"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:layout_marginLeft="40dp"
+                android:layout_marginLeft="7dp"
                 android:src="@drawable/ic_comment" />
             <TextView
                 android:id="@+id/tv_comment"
@@ -111,7 +112,7 @@
                 android:id="@+id/iv_share"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginLeft="70dp"
+                android:layout_marginLeft="60dp"
                 android:src="@drawable/ic_share" />
         </LinearLayout>
     </LinearLayout>

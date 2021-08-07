@@ -6,11 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".view.activity.CommentActivity">
 
-    <com.facebook.shimmer.ShimmerFrameLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_500" />
 
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="15dp"
+        android:text="Bình luận"
+
+
+        />
+
+
+    <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/item_comment"
         android:layout_width="match_parent"
-        android:layout_height="645dp">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
+      >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,25 +61,27 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
         android:id="@+id/rc_comment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
-        android:padding="10dp" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/toolbar"
+        android:padding="10dp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/bottom"
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:background="@color/pink_100">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_avartar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="9dp"
             android:src="@drawable/portrait" />
@@ -70,19 +92,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
             android:background="@drawable/ic_baseline_send_24">
 
         </ImageButton>
 
         <EditText
+            android:layout_marginLeft="2dp"
+            android:background="@android:color/transparent"
             android:id="@+id/edt_comment"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/ib_send"
             android:layout_toRightOf="@+id/iv_avartar"
-            android:hint="Enter comment here...">
+            android:hint="Viết gì đó">
 
 
         </EditText>

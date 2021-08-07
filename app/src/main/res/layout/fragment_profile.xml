@@ -121,22 +121,23 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
+                <Button
+                    android:id="@+id/btn_send_message"
+                    android:textAllCaps="false"
+                    android:layout_width="120dp"
+                    android:padding="11dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_border"
+                    android:drawableLeft="@drawable/ic_baseline_message_24"
+                    android:text="Nhắn tin" />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rc_all_photo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp" />
 
-                <Button
-                    android:textAllCaps="false"
-                    android:layout_width="120dp"
-                    android:padding="11dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/chat_right"
-                    android:drawableLeft="@drawable/ic_baseline_message_24"
-                    android:text="Nhắn tin" />
+
 
             </RelativeLayout>
 

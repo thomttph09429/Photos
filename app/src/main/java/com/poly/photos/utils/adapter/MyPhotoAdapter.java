@@ -27,7 +27,7 @@ public class MyPhotoAdapter extends RecyclerView.Adapter<MyPhotoAdapter.ImageVie
     @NonNull
     @Override
     public MyPhotoAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.photo_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_photo, parent, false);
         return new ImageViewHolder(view);
 
 
@@ -37,7 +37,7 @@ public class MyPhotoAdapter extends RecyclerView.Adapter<MyPhotoAdapter.ImageVie
     @Override
     public void onBindViewHolder(@NonNull MyPhotoAdapter.ImageViewHolder holder, int position) {
         final Post post = postList.get(position);
-        Picasso.with(context).load(post.getPostimage()).into(holder.ivPostImage);
+        Picasso.with(context).load(post.getPostimage()).fit().centerInside().into(holder.ivPostImage);
 
     }
 

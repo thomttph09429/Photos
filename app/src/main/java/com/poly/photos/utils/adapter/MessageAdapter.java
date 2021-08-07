@@ -14,8 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.poly.photos.R;
 import com.poly.photos.model.Chat;
-import com.poly.photos.model.User;
-import com.poly.photos.utils.GlobalUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,10 +37,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public MessageAdapter.MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == MSG_RIGHT) {
-            View view = LayoutInflater.from(context).inflate(R.layout.chat_item_right, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_chat_right, parent, false);
             return new MessageAdapter.MessageViewHolder(view);
         } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.chat_item_left, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_chat_left, parent, false);
             return new MessageAdapter.MessageViewHolder(view);
         }
     }
@@ -53,9 +51,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.showMessage.setText(chat.getMessage());
         if (urlAvartar.equals("default")) {
             holder.ivAvartar.setImageResource(R.drawable.portrait);
-        }else {
+        } else {
             Picasso.with(context).load(urlAvartar).into(holder.ivAvartar);
 
+        }
+        if (position == chatList.size() - 1) {
+            if (!chat.isSeen()) {
+                holder.tvSeen.setText("Đã gửi");
+
+            } else {
+                holder.tvSeen.setText("Đã xem");
+            }
+        }else {
+            holder.tvSeen.setVisibility(View.GONE);
         }
     }
 
@@ -66,13 +74,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
-   public      TextView showMessage;
-  public       ImageView ivAvartar;
+        public TextView showMessage, tvSeen;
+        public ImageView ivAvartar;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-             showMessage= itemView.findViewById(R.id.tv_message);
-             ivAvartar=itemView.findViewById(R.id.iv_avartar);
+            showMessage = itemView.findViewById(R.id.tv_message);
+            ivAvartar = itemView.findViewById(R.id.iv_avartar);
+            tvSeen = itemView.findViewById(R.id.tv_seen);
+
         }
     }
 

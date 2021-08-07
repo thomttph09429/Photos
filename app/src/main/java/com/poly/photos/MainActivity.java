@@ -19,12 +19,19 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private BottomNavigationView navigation;
     static Activity activity;
+    private FirebaseUser firebaseUser;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         activity = this;
 
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
 
         navigation = findViewById(R.id.navigation);
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -50,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
                     editor.apply();
 
                 } else if (destination.getId() == R.id.action_profile) {
+
+                    toolbar.setVisibility(View.GONE);
+
+                } else if (destination.getId() == R.id.action_chat) {
 
                     toolbar.setVisibility(View.GONE);
 
@@ -96,6 +109,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
 
+    }
+    private void status(String status){
+         reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("offline");
     }
 
 }

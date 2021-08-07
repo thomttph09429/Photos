@@ -6,7 +6,27 @@ public class User {
     private String name;
     private String email;
     private String phone;
+
     private String id;
+    private  String status;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User(String cover, String avartar, String name, String email, String phone, String id, String status) {
+        this.cover = cover;
+        this.avartar = avartar;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.id = id;
+        this.status = status;
+    }
+
     public String getAvartar() {
         return avartar;
     }

@@ -2,7 +2,6 @@ package com.poly.photos.utils.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
     @NonNull
     @Override
     public UserAdapter.UserViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_user, parent, false);
         return new UserAdapter.UserViewholder(view);
 
 

@@ -6,15 +6,22 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragment.ChatFragment">
+   <androidx.appcompat.widget.Toolbar
+       android:id="@+id/toolbar"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+      android:background="@color/purple_500"
+      />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_chat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        >
-    </androidx.appcompat.widget.Toolbar>
+
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/rv_user_chat"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       >
+
+   </androidx.recyclerview.widget.RecyclerView>
 
 
 

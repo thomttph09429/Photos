@@ -87,7 +87,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btn_logout:
                 auth.signOut();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Intent intent = new Intent(getActivity(), LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 getActivity().finish();
 

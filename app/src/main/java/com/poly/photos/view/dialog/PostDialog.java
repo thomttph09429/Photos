@@ -37,10 +37,12 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.poly.photos.MainActivity;
 import com.poly.photos.R;
 import com.poly.photos.model.Post;
 import com.poly.photos.utils.ProgressBarDialog;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.HashMap;
 
@@ -50,11 +52,11 @@ import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 public class PostDialog extends DialogFragment implements View.OnClickListener {
     private EditText edtWrite;
     private LinearLayout shareLocation, sharePhoto;
-    private ImageView btnPost, ivPhoto;
+    private ImageView btnPost, ivPhoto, ivClose;
     private Uri uriImage;
     private View view;
     private StorageReference storageRef;
-//    private DatabaseReference mDatabaseRef;
+    //    private DatabaseReference mDatabaseRef;
     private StorageTask uploadTask;
     private StorageReference storageReference;
     private FirebaseAuth auth;
@@ -68,6 +70,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
 
+
     }
 
     @Override
@@ -77,13 +80,19 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
             view = inflater.inflate(R.layout.dialog_post, container);
 
         }
+
+        initViews();
+        initAction();
+        return view;
+    }
+
+    private void initViews() {
         edtWrite = view.findViewById(R.id.edt_write);
         shareLocation = view.findViewById(R.id.lnl_share_location);
         sharePhoto = view.findViewById(R.id.lnl_share_photo);
         btnPost = view.findViewById(R.id.btn_post);
         ivPhoto = view.findViewById(R.id.iv_photo);
-        initAction();
-        return view;
+        ivClose = view.findViewById(R.id.iv_close);
     }
 
 
@@ -92,8 +101,8 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         sharePhoto.setOnClickListener(this);
         shareLocation.setOnClickListener(this);
         btnPost.setOnClickListener(this);
+        ivClose.setOnClickListener(this);
         storageRef = FirebaseStorage.getInstance().getReference("Posts");
-//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Posts");
         storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
 
@@ -113,6 +122,12 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
             case R.id.btn_post:
                 upLoadFile();
                 break;
+            case R.id.iv_close:
+                ivPhoto.setVisibility(View.GONE);
+                ivClose.setVisibility(View.GONE);
+                break;
+            default:
+                break;
         }
 
 
@@ -126,7 +141,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     }
 
     private void showProgress() {
-        ProgressBarDialog.getInstance(getContext()).showDialog("Loading", getContext());
+        ProgressBarDialog.getInstance(getContext()).showDialog("Đợi 1 lát...", getContext());
 
     }
 
@@ -170,11 +185,12 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                         reference.child(postid).setValue(hashMap);
                         dimissProgress();
                         dismiss();
-                        Toast.makeText(getContext(), "Post successful !", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getContext(), MainActivity.class));
+                        Toast.makeText(getContext(), "Oke rồi", Toast.LENGTH_SHORT).show();
 
 
                     } else {
-                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "gòi xong", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -206,6 +222,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                 && data != null && data.getData() != null) {
             uriImage = data.getData();
             ivPhoto.setVisibility(View.VISIBLE);
+            ivClose.setVisibility(View.VISIBLE);
             Picasso.with(getContext()).load(uriImage).fit().centerCrop().into(ivPhoto);
         }
     }
