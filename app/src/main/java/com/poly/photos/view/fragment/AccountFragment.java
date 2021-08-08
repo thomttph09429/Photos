@@ -228,7 +228,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showProgress() {
-        ProgressBarDialog.getInstance(getContext()).showDialog("Đợi 1 lát....", getContext());
+        ProgressBarDialog.getInstance(getContext()).showDialog("Please wait", getContext());
     }
 
 

@@ -12,13 +12,11 @@
 
         <action
             android:id="@+id/action_home_to_action_comment"
-            app:destination="@+id/action_comment"
-            />
+            app:destination="@+id/action_comment" />
 
         <action
             android:id="@+id/action_home_to_action_account"
-            app:destination="@+id/action_account"
-            />
+            app:destination="@+id/action_account" />
 
 
     </fragment>
@@ -27,6 +25,7 @@
         android:name="com.poly.photos.view.fragment.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat">
+
     </fragment>
     <fragment
         android:id="@+id/action_create_post"
@@ -56,17 +55,15 @@
         tools:layout="@layout/fragment_search">
 
 
-
     </fragment>
     <fragment
         android:id="@+id/action_post"
         android:name="com.poly.photos.view.dialog.PostDialog"
         android:label="fragment_search"
         tools:layout="@layout/dialog_post">
-    <action
-        android:id="@+id/action_post_to_action_home"
-        app:destination="@+id/action_home"
-        />
+        <action
+            android:id="@+id/action_post_to_action_home"
+            app:destination="@+id/action_home" />
     </fragment>
     <fragment
         android:id="@+id/action_setting"
@@ -80,6 +77,20 @@
         android:name="com.poly.photos.view.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_notification"
+        android:name="com.poly.photos.view.fragment.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification">
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_detail_post"
+        android:name="com.poly.photos.view.fragment.PostDetailFragment"
+        android:label="fragment_post_detail"
+        tools:layout="@layout/fragment_post_detail">
 
     </fragment>
 </navigation>

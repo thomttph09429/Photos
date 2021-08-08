@@ -95,18 +95,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             edtPass.setError("Password is require.");
             return;
         }
-        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
-                } else {
-                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
-                }
-                finish();
-            }
-        });
     }
 }

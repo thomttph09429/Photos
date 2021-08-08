@@ -5,16 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +33,7 @@ import com.poly.photos.model.User;
 import com.poly.photos.view.activity.CommentActivity;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -79,14 +85,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             intent.putExtra("publisherId", post.getPublisher());
             context.startActivity(intent);
         });
-        holder.lSelect.setOnClickListener(v ->
-        {
-            Intent intent = new Intent(context, CommentActivity.class);
-            intent.putExtra("postId", post.getPostid());
-            intent.putExtra("publisherId", post.getPublisher());
-            context.startActivity(intent);
-        });
+//        holder.lSelect.setOnClickListener(v ->
+//        {
+//            Intent intent = new Intent(context, CommentActivity.class);
+//            intent.putExtra("postId", post.getPostid());
+//            intent.putExtra("publisherId", post.getPublisher());
+//            context.startActivity(intent);
+//        });
         holder.ivPhoto.setOnClickListener(v -> {
+
+            SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
+            editor.putString("postId", post.getPostid());
+            editor.putString("publisherId", post.getPublisher());
+            editor.apply();
+            Navigation.createNavigateOnClickListener(R.id.action_detail_post).onClick(holder.ivPhoto);
 
         });
 
@@ -121,7 +133,38 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
         });
 
+        holder.iv_share.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(context, v);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.delete:
+                       final      String id = post.getPostid();
+                            FirebaseDatabase.getInstance().getReference("Posts").child(id).removeValue()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                deleteNotifications(id, firebaseUser.getUid());
+                                            }
+                                        }
+                                    });
+                            return true;
+                        case R.id.edit:
+                        default:
+                            return false;
 
+                    }
+                }
+            });
+            popupMenu.inflate(R.menu.post);
+            if (!post.getPublisher().equals(firebaseUser.getUid())){
+                popupMenu.getMenu().findItem(R.id.edit).setVisible(false);
+                popupMenu.getMenu().findItem(R.id.delete).setVisible(false);
+            }
+            popupMenu.show();
+        });
 
         getComment(post.getPostid(), holder.iv_comment);
 
@@ -132,6 +175,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             if (holder.iv_like.getTag().equals("like")) {
                 FirebaseDatabase.getInstance().getReference().child("Likes")
                         .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+                addNotificationLove(post.getPublisher(), post.getPostid());
             } else {
                 FirebaseDatabase.getInstance().getReference().child("Likes")
                         .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -145,6 +189,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             if (holder.iv_care.getTag().equals("care")) {
                 FirebaseDatabase.getInstance().getReference().child("Cares")
                         .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+                addNotificationCare(post.getPublisher(), post.getPostid());
+
             } else {
                 FirebaseDatabase.getInstance().getReference().child("Cares")
                         .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -178,10 +224,35 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             tv_care = itemView.findViewById(R.id.tv_care);
             iv_comment = itemView.findViewById(R.id.iv_comment);
             tv_comment = itemView.findViewById(R.id.tv_comment);
-            iv_share = itemView.findViewById(R.id.iv_share);
+            iv_share = itemView.findViewById(R.id.iv_more);
             lSelect = itemView.findViewById(R.id.select);
 
         }
+    }
+
+    private void deleteNotifications(final String postId, String userId) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.child("postId").getValue().equals(postId)) {
+                        snapshot.getRef().removeValue()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(context, "Đã xóa!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void publisherInfor(ImageView ivAvartar, TextView tvUsername, String userId) {
@@ -317,4 +388,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
     }
 
+    private void addNotificationLove(String userId, String postId) {
+        if (!firebaseUser.getUid().equals(userId)) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userId", firebaseUser.getUid());
+            hashMap.put("text", "đã thả tim vào ảnh của bạn");
+            hashMap.put("postId", postId);
+            hashMap.put("isPost", true);
+            reference.push().setValue(hashMap);
+        }
+
+    }
+
+    private void addNotificationCare(String userId, String postId) {
+        if (!firebaseUser.getUid().equals(userId)) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("userId", firebaseUser.getUid());
+            hashMap.put("text", "đã cười ha ha về ảnh của bạn:))");
+            hashMap.put("postId", postId);
+            hashMap.put("isPost", true);
+            reference.push().setValue(hashMap);
+        }
+    }
 }

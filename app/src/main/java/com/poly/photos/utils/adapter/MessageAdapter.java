@@ -50,14 +50,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Chat chat = chatList.get(position);
         holder.showMessage.setText(chat.getMessage());
         if (urlAvartar.equals("default")) {
-            holder.ivAvartar.setImageResource(R.drawable.portrait);
+            holder.ivAvartar.setImageResource(R.drawable.sky);
         } else {
             Picasso.with(context).load(urlAvartar).into(holder.ivAvartar);
 
         }
         if (position == chatList.size() - 1) {
             if (!chat.isSeen()) {
-                holder.tvSeen.setText("Đã gửi");
+                holder.tvSeen.setText("Đã nhận");
 
             } else {
                 holder.tvSeen.setText("Đã xem");

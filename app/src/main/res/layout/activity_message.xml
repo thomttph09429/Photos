@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".view.activity.MessageActivity">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -13,14 +12,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/purple_500" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/portrait"
+        android:id="@+id/iv_avartar"/>
 
 
     <TextView
+        android:layout_toRightOf="@+id/iv_avartar"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="7dp"
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="15dp"
+        android:textSize="15dp"
+        android:fontFamily="@font/hero_new_extrabold"
         android:text="truong ngoc thom"
 
 

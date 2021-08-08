@@ -1,28 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragment.ChatFragment">
-   <androidx.appcompat.widget.Toolbar
-       android:id="@+id/toolbar"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-      android:background="@color/purple_500"
-      />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_500" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_avartar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/sky" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/iv_avartar"
+        android:fontFamily="@font/hero_new_extrabold"
+        android:text="Nhắn tin"
+        android:textSize="16dp" />
+
+    <Button
+        android:padding="5dp"
+        android:id="@+id/btn_search"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/background_border"
+        android:drawableLeft="@drawable/ic_baseline_search_24"
+        android:gravity="left|center"
+        android:hint="Tìm kiếm "
+        android:textAllCaps="false" />
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_user_chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_search"
+        android:layout_marginTop="20dp">
 
-   <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/rv_user_chat"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       >
-
-   </androidx.recyclerview.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
-
-</LinearLayout>
+</RelativeLayout>

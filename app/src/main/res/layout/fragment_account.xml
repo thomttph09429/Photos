@@ -21,7 +21,7 @@
                 android:id="@+id/iv_cover"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/sky" />
+               />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_avartar"
@@ -31,7 +31,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
                 android:backgroundTint="@color/purple_500"
-                android:src="@drawable/portrait" />
+          />
 
             <ImageButton
                 android:id="@+id/ib_select_avartar"

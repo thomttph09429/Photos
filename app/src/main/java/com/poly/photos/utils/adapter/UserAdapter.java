@@ -23,6 +23,7 @@ import com.poly.photos.model.User;
 import com.poly.photos.view.activity.MessageActivity;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -81,6 +82,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
                         .child("following").child(user.getId()).setValue(true);
                 FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getId())
                         .child("Follows").child(firebaseUser.getUid()).setValue(true);
+//                addNotification(user.getId());
+
+
             }else {
                 FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                         .child("following").child(user.getId()).removeValue();
@@ -129,4 +133,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
             }
         });
     }
+//    private void addNotification(String userId){
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+//        HashMap<String,Object> hashMap=new HashMap<>();
+//        hashMap.put("userId", firebaseUser.getUid());
+//        hashMap.put("text","đã theo dõi bạn");
+//        hashMap.put("postId","");
+//        hashMap.put("isPost", false);
+//        reference.push().setValue(hashMap);
+//    }
 }

@@ -14,6 +14,7 @@
         android:src="@drawable/ic_account_circle_24" />
 
     <TextView
+        android:fontFamily="@font/arial_bold"
         android:paddingTop="10dp"
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
@@ -22,6 +23,7 @@
         android:layout_toRightOf="@id/iv_avartar"
         android:layout_weight="2"
         android:gravity="center"
+        android:textSize="14dp"
         android:text="truong ngoc thom " />
 
 
@@ -52,15 +54,14 @@
         android:layout_toRightOf="@id/iv_avartar"
         android:layout_toEndOf="@id/iv_avartar"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:text="hom quaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_name"
         android:layout_toRightOf="@id/iv_avartar"
-        android:layout_marginTop="5dp"
-        android:paddingTop="5dp"
         android:id="@+id/tv_last_message"
         android:textColor="@color/background_3"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:maxLines="1"/>
 
 </RelativeLayout>

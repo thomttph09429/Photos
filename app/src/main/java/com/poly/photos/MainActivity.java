@@ -10,6 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -40,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         activity = this;
-
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
 
@@ -89,6 +89,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (navController.getCurrentDestination().getId() == R.id.action_chat) {
+            navController.navigate(R.id.action_home);
+            return;
+        }if (navController.getCurrentDestination().getId()==R.id.action_create_post){
+            navController.navigate(R.id.action_home);
+            return;
+        }
+        if (navController.getCurrentDestination().getId()==R.id.action_account){
+            navController.navigate(R.id.action_home);
+            return;
+        } if (navController.getCurrentDestination().getId()==R.id.action_profile){
+            navController.navigate(R.id.action_home);
+            return;
+        }if (navController.getCurrentDestination().getId()==R.id.action_serach){
+            navController.navigate(R.id.action_home);
+            return;
+        }if (navController.getCurrentDestination().getId()==R.id.action_setting){
+            navController.navigate(R.id.action_home);
+            return;
+        }if (navController.getCurrentDestination().getId()==R.id.action_detail_post){
+            navController.navigate(R.id.action_home);
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search:
@@ -110,8 +138,9 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp() || super.onSupportNavigateUp();
 
     }
-    private void status(String status){
-         reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+
+    private void status(String status) {
+        reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("status", status);

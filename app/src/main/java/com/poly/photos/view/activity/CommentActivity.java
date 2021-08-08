@@ -65,7 +65,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         initActions();
         getAvartar();
         readComment();
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -99,7 +98,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         rc_comment.setLayoutManager(layoutManager);
         commentAdapter = new CommentAdapter(this, commentList, postId);
         rc_comment.setAdapter(commentAdapter);
-        layoutManager.setStackFromEnd(true);
+        ibSend.setOnClickListener(this);
 
 
     }
@@ -122,6 +121,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+
     private void addComment() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Comments")
                 .child(postId);
@@ -133,9 +133,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         hashMap.put("commentid", commentid);
 
         reference.push().setValue(hashMap);
-
-        edtComment.setText("");
+//        edtComment.setText("");
     }
+
+    private void addNotification(){
+        if (!firebaseUser.getUid().equals(publisherId)){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(publisherId);
+            HashMap<String,Object> hashMap=new HashMap<>();
+            hashMap.put("userId", firebaseUser.getUid());
+            hashMap.put("text","đã bình luận "+ edtComment.getText().toString());
+            hashMap.put("postId",postId);
+            hashMap.put("isPost", true);
+            reference.push().setValue(hashMap);
+        }
+
+    }
+
+
+
+
 
     private void readComment() {
         Intent intent = getIntent();
@@ -180,12 +196,14 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
 
     }
-    private void sendComment(){
+
+    private void sendComment() {
         if (edtComment.getText().toString().equals("")) {
             Toast.makeText(CommentActivity.this, "Viết gì đó đi", Toast.LENGTH_SHORT).show();
         } else {
             addComment();
             readComment();
+            addNotification();
 
         }
         edtComment.setText("");
@@ -200,9 +218,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ib_send:
-           sendComment();
+                sendComment();
         }
 
     }

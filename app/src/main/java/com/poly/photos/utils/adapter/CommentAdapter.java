@@ -22,6 +22,7 @@ import com.poly.photos.model.Comment;
 import com.poly.photos.model.User;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -91,4 +92,5 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             }
         });
     }
+
 }

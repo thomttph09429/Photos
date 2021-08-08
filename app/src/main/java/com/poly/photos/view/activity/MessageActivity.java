@@ -3,6 +3,7 @@ package com.poly.photos.view.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +33,7 @@ import com.poly.photos.R;
 import com.poly.photos.model.Chat;
 import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.MessageAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +48,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     String userId;
     private EditText edtMessage;
     private ImageView ivSend;
+    private  CircleImageView ivAvartar;
     private RecyclerView rvMessage;
     private MessageAdapter messageAdapter;
     private List<Chat> chatList;
@@ -78,6 +81,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         ivSend = findViewById(R.id.iv_send);
         edtMessage = findViewById(R.id.edt_message);
         rvMessage = findViewById(R.id.rv_message);
+        ivAvartar = findViewById(R.id.iv_avartar);
 
     }
 
@@ -89,7 +93,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         layoutManager.setStackFromEnd(true);
         rvMessage.setHasFixedSize(true);
         rvMessage.setLayoutManager(layoutManager);
-        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+//        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
 
     }
@@ -103,7 +107,9 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 tvUserName.setText(user.getName());
+                Picasso.with(getApplicationContext()).load(user.getAvartar()).into(ivAvartar);
                 readMessage(firebaseUser.getUid(), userId, user.getAvartar());
+
             }
 
             @Override
@@ -113,14 +119,14 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    private void seenMessage(String userid) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+    private void seenMessage(final String userId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
         seenListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userid)) {
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId)) {
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("isSeen", true);
                         snapshot.getRef().updateChildren(hashMap);
@@ -133,7 +139,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
     }
 
     private void sendMessage(String sender, String receiver, String message) {
@@ -151,7 +156,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()){
+                if (!dataSnapshot.exists()) {
                     chatRef.child("id").setValue(userId);
                 }
             }
@@ -234,5 +239,12 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         super.onPause();
         databaseReference.removeEventListener(seenListener);
         status("offline");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        finish();
     }
 }
