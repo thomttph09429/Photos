@@ -12,25 +12,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/purple_500" />
+
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_marginLeft="45dp"
-        android:layout_marginTop="5dp"
+        android:id="@+id/iv_avartar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/portrait"
-        android:id="@+id/iv_avartar"/>
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/portrait" />
 
 
     <TextView
-        android:layout_toRightOf="@+id/iv_avartar"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="7dp"
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/iv_avartar"
         android:fontFamily="@font/hero_new_extrabold"
         android:text="truong ngoc thom"
+        android:textSize="15dp"
 
 
         />
@@ -62,14 +63,12 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/ib_send"
             android:background="@android:color/transparent"
             android:hint="Tin nhắn"
 
             />
 
         <ImageButton
-
             android:id="@+id/iv_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

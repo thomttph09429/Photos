@@ -202,7 +202,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                     messageAdapter = new MessageAdapter(MessageActivity.this, chatList, urlAvartar);
                     rvMessage.setAdapter(messageAdapter);
                 }
-//                messageAdapter.notifyDataSetChanged();
+                messageAdapter.notifyDataSetChanged();
             }
 
             @Override
