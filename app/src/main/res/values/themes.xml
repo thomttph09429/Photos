@@ -16,7 +16,7 @@
     </style>
 
     <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="android:statusBarColor">@color/purple_500</item>
+<!--        <item name="android:statusBarColor">@color/purple_500</item>-->
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.Design.BottomSheetDialog</item>
     </style>
@@ -40,5 +40,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <!-- splashcreen -->
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:background">@drawable/splashcreen_background</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 
 </resources>

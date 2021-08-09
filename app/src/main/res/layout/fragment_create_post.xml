@@ -2,39 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
 
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="horizontal"
-android:padding="5dp"
-    >
+    <LinearLayout
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+       >
 
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_avartar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/portrait" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_avartar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/portrait"
-      />
+        <Button
+            android:id="@+id/btn_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_retangle"
+            android:fontFamily="@font/arial_bold"
+            android:gravity="center_vertical|left"
+            android:text="Upload your image? "
+            android:textAllCaps="false"
+            android:textColor="@color/purple_700"
 
-    <Button
-    android:id="@+id/btn_post"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:background="@drawable/button_retangle"
-    android:fontFamily="@font/arial_bold"
-    android:gravity="center_vertical|left"
-    android:text="Upload your image? "
-    android:textAllCaps="false"
-    android:textColor="@color/purple_700"
-
-    />
-</LinearLayout>
+            />
+    </LinearLayout>
 </LinearLayout>

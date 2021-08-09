@@ -47,7 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private TextView tvAllPhoto, tvAllFollows, tvAllFollowing, tvName;
+    private TextView tvAllPhoto, tvName;
     private FirebaseUser firebaseUser;
     private Button btnSendMessage;
     private ImageView ivCover;
@@ -85,8 +85,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         ivAvartar = view.findViewById(R.id.iv_avartar);
         ivCover = view.findViewById(R.id.iv_cover);
         rcMyPhoto = view.findViewById(R.id.rc_all_photo);
-        tvAllFollowing = view.findViewById(R.id.tv_all_following);
-        tvAllFollows = view.findViewById(R.id.tv_all_follows);
+
         tvAllPhoto = view.findViewById(R.id.tv_all_photo);
         btnSendMessage= view.findViewById(R.id.btn_send_message);
 

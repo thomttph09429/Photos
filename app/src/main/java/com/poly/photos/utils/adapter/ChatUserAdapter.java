@@ -56,11 +56,9 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
 
 
         holder.tvUserName.setText(user.getName());
-        if (user.getAvartar().equals("default")) {
-            holder.ivAvartar.setImageResource(R.drawable.portrait);
-        } else {
+
             Picasso.with(context).load(user.getAvartar()).into(holder.ivAvartar);
-        }
+
             if (user.getStatus().equals("online")) {
                 holder.ivOnline.setVisibility(View.VISIBLE);
                 holder.ivOffline.setVisibility(View.GONE);

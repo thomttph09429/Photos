@@ -85,13 +85,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             intent.putExtra("publisherId", post.getPublisher());
             context.startActivity(intent);
         });
-//        holder.lSelect.setOnClickListener(v ->
-//        {
-//            Intent intent = new Intent(context, CommentActivity.class);
-//            intent.putExtra("postId", post.getPostid());
-//            intent.putExtra("publisherId", post.getPublisher());
-//            context.startActivity(intent);
-//        });
+
         holder.ivPhoto.setOnClickListener(v -> {
 
             SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();

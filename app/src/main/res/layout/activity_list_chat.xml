@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.fragment.ChatFragment">
+    tools:context=".view.activity.ListChatActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText edtName, edtEmail, edtPass, edtPhone;
+    private EditText edtName, edtEmail, edtPass;
     private Button btnRegister;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -60,7 +60,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         edtEmail = findViewById(R.id.edt_email);
         edtName = findViewById(R.id.edt_name);
         edtPass = findViewById(R.id.edt_pass);
-        edtPhone = findViewById(R.id.edt_phone);
         btnLogin = findViewById(R.id.tv_login);
         btnRegister = findViewById(R.id.btn_register);
 
@@ -110,7 +109,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String email = edtEmail.getText().toString();
         String pass = edtPass.getText().toString();
         String name = edtName.getText().toString();
-        String phone = edtPhone.getText().toString();
         if (TextUtils.isEmpty(name)) {
             edtEmail.setError("Name is require.");
             return;
@@ -119,9 +117,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         } else if (TextUtils.isEmpty(pass)) {
             edtPass.setError("Password is require.");
-            return;
-        } else if (TextUtils.isEmpty(phone)) {
-            edtPass.setError("Number phone require.");
             return;
         }
         auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -151,11 +146,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     userID = auth.getCurrentUser().getUid();
                     Map<String, Object> muser = new HashMap<>();
                     muser.put("name", name);
-                    muser.put("phone", phone);
                     muser.put("email", email);
                     muser.put("id", userID);
-                    muser.put("avartar","default");
-                    muser.put("cover","default");
+                    muser.put("avartar","https://firebasestorage.googleapis.com/v0/b/appchat-2f812.appspot.com/o/ic_lol.png?alt=media&token=72e2379e-f4db-406c-818b-9d2b91d48f46");
+                    muser.put("cover","https://firebasestorage.googleapis.com/v0/b/appchat-2f812.appspot.com/o/ic_lol.png?alt=media&token=72e2379e-f4db-406c-818b-9d2b91d48f46");
 
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
                     ref.setValue(muser).addOnFailureListener(new OnFailureListener() {

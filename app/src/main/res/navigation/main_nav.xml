@@ -20,13 +20,7 @@
 
 
     </fragment>
-    <fragment
-        android:id="@+id/action_chat"
-        android:name="com.poly.photos.view.fragment.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat">
 
-    </fragment>
     <fragment
         android:id="@+id/action_create_post"
         android:name="com.poly.photos.view.fragment.CreatePostFragment"
@@ -91,6 +85,13 @@
         android:name="com.poly.photos.view.fragment.PostDetailFragment"
         android:label="fragment_post_detail"
         tools:layout="@layout/fragment_post_detail">
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_search"
+        android:name="com.poly.photos.view.fragment.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
 
     </fragment>
 </navigation>

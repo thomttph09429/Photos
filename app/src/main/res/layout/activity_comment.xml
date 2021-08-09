@@ -26,6 +26,7 @@
 
 
     <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_below="@+id/toolbar"
         android:id="@+id/item_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

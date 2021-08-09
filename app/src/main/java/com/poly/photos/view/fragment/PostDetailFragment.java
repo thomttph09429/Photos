@@ -75,7 +75,7 @@ public class PostDetailFragment extends Fragment {
 
     private void getName() {
         SharedPreferences share = getContext().getSharedPreferences("name", Context.MODE_PRIVATE);
-        postId = share.getString("postId", "none");
+        publisherId = share.getString("publisherId", "none");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(publisherId);
         ref.addValueEventListener(new ValueEventListener() {
             @Override

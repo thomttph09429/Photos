@@ -13,16 +13,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.poly.photos.view.activity.ListChatActivity;
 
 import java.util.HashMap;
 
@@ -32,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigation;
     static Activity activity;
     private FirebaseUser firebaseUser;
-    DatabaseReference reference;
+    private DatabaseReference reference;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
                     toolbar.setVisibility(View.GONE);
 
-                } else if (destination.getId() == R.id.action_chat) {
-
-                    toolbar.setVisibility(View.GONE);
-
                 } else {
                     toolbar.setVisibility(View.VISIBLE);
                 }
@@ -90,30 +91,49 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (navController.getCurrentDestination().getId() == R.id.action_chat) {
-            navController.navigate(R.id.action_home);
-            return;
-        }if (navController.getCurrentDestination().getId()==R.id.action_create_post){
+        if (navController.getCurrentDestination().getId() == R.id.action_create_post) {
             navController.navigate(R.id.action_home);
             return;
         }
-        if (navController.getCurrentDestination().getId()==R.id.action_account){
-            navController.navigate(R.id.action_home);
-            return;
-        } if (navController.getCurrentDestination().getId()==R.id.action_profile){
-            navController.navigate(R.id.action_home);
-            return;
-        }if (navController.getCurrentDestination().getId()==R.id.action_serach){
-            navController.navigate(R.id.action_home);
-            return;
-        }if (navController.getCurrentDestination().getId()==R.id.action_setting){
-            navController.navigate(R.id.action_home);
-            return;
-        }if (navController.getCurrentDestination().getId()==R.id.action_detail_post){
+        if (navController.getCurrentDestination().getId() == R.id.action_account) {
             navController.navigate(R.id.action_home);
             return;
         }
-        super.onBackPressed();
+        if (navController.getCurrentDestination().getId() == R.id.action_profile) {
+            navController.navigate(R.id.action_home);
+            return;
+        }
+        if (navController.getCurrentDestination().getId() == R.id.action_setting) {
+            navController.navigate(R.id.action_home);
+            return;
+        }
+        if (navController.getCurrentDestination().getId() == R.id.action_detail_post) {
+            navController.navigate(R.id.action_home);
+            return;
+        }
+        if (navController.getCurrentDestination().getId() == R.id.action_notification) {
+            navController.navigate(R.id.action_home);
+            return;
+        }
+        if (navController.getCurrentDestination().getId() == R.id.action_setting) {
+            navController.navigate(R.id.action_account);
+            return;
+        }
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -123,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.action_serach);
                 return true;
             case R.id.setting:
-                navController.navigate(R.id.action_setting);
+                startActivity(new Intent(MainActivity.this, ListChatActivity.class));
                 return true;
 
             default:

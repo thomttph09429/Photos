@@ -185,8 +185,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                         reference.child(postid).setValue(hashMap);
                         dimissProgress();
                         dismiss();
-                        startActivity(new Intent(getContext(), MainActivity.class));
-                        Toast.makeText(getContext(), "Oke rồi", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Oke rồi", Toast.LENGTH_SHORT).show();
 
 
                     } else {

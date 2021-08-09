@@ -8,12 +8,14 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -59,17 +61,17 @@ import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
-    private TextView tvAllPhoto, tvAllFollows, tvAllFollowing, tvName;
+    private TextView tvAllPhoto, tvName;
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
     private String userID;
-    private ImageView ivCover;
+    private ImageView ivCover, ivSetting;
     private CircleImageView ivAvartar;
     private ImageButton ib_select_avartar, btnUpdateAvartar, ibEdit;
-    private Uri uriAvartar;
-    private Uri uriCover;
+    Uri uriAvartar;
+    Uri uriCover;
     private View view;
     private StorageReference storageRef;
     private StorageTask uploadTask;
@@ -108,6 +110,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         postList = new ArrayList<>();
         ib_select_avartar.setOnClickListener(this);
         btnUpdateAvartar.setOnClickListener(this);
+        ivSetting.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -128,8 +131,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         ib_select_avartar = view.findViewById(R.id.ib_select_avartar);
         btnUpdateAvartar = view.findViewById(R.id.btn_update_photo);
         rcMyPhoto = view.findViewById(R.id.rc_all_photo);
-        tvAllFollowing = view.findViewById(R.id.tv_all_following);
-        tvAllFollows = view.findViewById(R.id.tv_all_follows);
+        ivSetting = view.findViewById(R.id.iv_setting);
         tvAllPhoto = view.findViewById(R.id.tv_all_photo);
 
     }
@@ -145,9 +147,16 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_update_photo:
                 upLoadImage();
                 break;
+            case R.id.iv_setting:
+                setting();
+                break;
             default:
                 break;
         }
+    }
+
+    private void setting() {
+        Navigation.createNavigateOnClickListener(R.id.action_setting).onClick(ivSetting);
     }
 
     private void chooseUpdate() {
@@ -364,6 +373,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MY_CAMERA_UPDATE_COVERPHOTO && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
 

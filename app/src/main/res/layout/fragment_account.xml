@@ -7,7 +7,6 @@
     android:layout_height="match_parent">
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +20,16 @@
                 android:id="@+id/iv_cover"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-               />
+                android:src="@drawable/avartar_circle" />
+
+            <ImageView
+                android:id="@+id/iv_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/iv_avartar"
+                android:layout_marginLeft="70dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_more" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_avartar"
@@ -30,8 +38,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
-                android:backgroundTint="@color/purple_500"
-          />
+                android:backgroundTint="@color/purple_500" />
 
             <ImageButton
                 android:id="@+id/ib_select_avartar"
@@ -68,18 +75,19 @@
                 android:text="Trương ngọc thươm" />
 
             <ImageButton
-                android:visibility="gone"
                 android:id="@+id/ib_edit"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_edit_24" />
+                android:src="@drawable/ic_baseline_edit_24"
+                android:visibility="gone" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal">
 
 
@@ -95,12 +103,12 @@
                         android:text="Ảnh" />
 
                     <TextView
-                        android:textSize="19dp"
                         android:id="@+id/tv_all_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234" />
+                        android:text="100"
+                        android:textSize="19dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -111,38 +119,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ảnh" />
+                        android:text="Bài viết" />
 
                     <TextView
-                        android:textSize="19dp"
+                        android:id="@+id/tv_npost"
 
-                        android:id="@+id/tv_all_follows"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234" />
+                        android:text="100"
+                        android:textSize="19dp" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="115dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ảnh" />
-
-                    <TextView
-                        android:textSize="19dp"
-                        android:id="@+id/tv_all_following"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/arial_bold"
-                        android:text="1234" />
-
-                </LinearLayout>
 
             </LinearLayout>
 
@@ -150,8 +139,7 @@
                 android:id="@+id/rc_all_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="25dp"
-                />
+                android:layout_marginTop="25dp" />
         </LinearLayout>
 
     </LinearLayout>

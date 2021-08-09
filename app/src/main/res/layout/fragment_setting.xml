@@ -9,6 +9,7 @@
 
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -52,27 +53,7 @@
             android:text="Your name" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
 
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/arial_bold"
-            android:text="Your number phone:" />
-
-        <TextView
-            android:id="@+id/tv_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:fontFamily="@font/cochin"
-            android:text="Your number phone" />
-    </LinearLayout>
 
 
     <Button

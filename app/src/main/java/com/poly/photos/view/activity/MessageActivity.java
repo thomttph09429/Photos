@@ -3,12 +3,14 @@ package com.poly.photos.view.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +36,7 @@ import com.poly.photos.R;
 import com.poly.photos.model.Chat;
 import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.MessageAdapter;
+import com.poly.photos.view.fragment.ProfileFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -71,8 +75,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
-            startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
+            startActivity(new Intent(MessageActivity.this, ListChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            finish();
         });
     }
 
@@ -82,7 +86,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         edtMessage = findViewById(R.id.edt_message);
         rvMessage = findViewById(R.id.rv_message);
         ivAvartar = findViewById(R.id.iv_avartar);
-
     }
 
     private void initAction() {
@@ -93,6 +96,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         layoutManager.setStackFromEnd(true);
         rvMessage.setHasFixedSize(true);
         rvMessage.setLayoutManager(layoutManager);
+
 //        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
 
@@ -179,7 +183,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         if (!message.equals("")) {
             sendMessage(firebaseUser.getUid(), userId, message);
 
-        } else {
         }
         edtMessage.setText("");
     }
@@ -202,7 +205,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                     messageAdapter = new MessageAdapter(MessageActivity.this, chatList, urlAvartar);
                     rvMessage.setAdapter(messageAdapter);
                 }
-                messageAdapter.notifyDataSetChanged();
+//                messageAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -234,17 +237,11 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         status("online");
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        databaseReference.removeEventListener(seenListener);
-        status("offline");
-    }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(MessageActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        startActivity(new Intent(MessageActivity.this, ListChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         finish();
     }
 }

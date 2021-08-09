@@ -43,7 +43,7 @@ import java.util.ArrayList;
 
 public class SettingFragment extends Fragment implements View.OnClickListener {
     private Button btnLogout, btnResetPw;
-    private TextView tvEmai, tvPhone, tvName, btnResendCode, tvMsg;
+    private TextView tvEmai, tvName, btnResendCode, tvMsg;
     private View view;
     private FirebaseAuth auth;
 
@@ -74,7 +74,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         btnLogout = view.findViewById(R.id.btn_logout);
         tvEmai = view.findViewById(R.id.tv_email);
         tvName = view.findViewById(R.id.tv_name);
-        tvPhone = view.findViewById(R.id.tv_phone);
         btnResetPw = view.findViewById(R.id.btn_reset);
     }
 
@@ -124,7 +123,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                     User user= snapshot.getValue(User.class);
                     tvName.setText(user.getName());
                     tvEmai.setText(user.getEmail());
-                    tvPhone.setText(user.getPhone());
                 }
 
                 @Override

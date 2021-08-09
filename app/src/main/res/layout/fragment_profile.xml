@@ -50,6 +50,7 @@
 
 
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -71,9 +72,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234"
+                        android:text="100"
                         android:textSize="19dp" />
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="115dp"
@@ -83,35 +85,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ảnh" />
+                        android:text="Bài viết"/>
 
                     <TextView
-                        android:id="@+id/tv_all_follows"
-
+                        android:id="@+id/tv_npost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/arial_bold"
-                        android:text="1234"
-                        android:textSize="19dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="115dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ảnh" />
-
-                    <TextView
-                        android:id="@+id/tv_all_following"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/arial_bold"
-                        android:text="1234"
+                        android:text="100"
                         android:textSize="19dp" />
 
                 </LinearLayout>

@@ -44,6 +44,8 @@ public class MyPhotoAdapter extends RecyclerView.Adapter<MyPhotoAdapter.ImageVie
         holder.itemView.setOnClickListener(v -> {
             SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
             editor.putString("postId", post.getPostid());
+            editor.putString("publisherId", post.getPublisher());
+
             editor.apply();
             Navigation.createNavigateOnClickListener(R.id.action_detail_post).onClick(v);
 

@@ -1,22 +1,11 @@
-package com.poly.photos.view.fragment;
-
-import android.app.Activity;
-import android.os.Bundle;
+package com.poly.photos.view.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toolbar;
+import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,40 +15,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.R;
-import com.poly.photos.model.Chat;
 import com.poly.photos.model.ChatList;
 import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.ChatUserAdapter;
-import com.poly.photos.utils.adapter.UserAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatFragment extends Fragment {
-    private View view;
+public class ListChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseUser firebaseUser;
-    private  DatabaseReference reference;
+    private DatabaseReference reference;
+    private CircleImageView ivAvartar;
     ChatUserAdapter chatUserAdapter;
     List<ChatList> userList;
     List<User> mUser;
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_chat, container, false);
-        }
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list_chat);
         initViews();
         initActions();
+        getAvartar();
         addUser();
 
     }
@@ -67,14 +48,14 @@ public class ChatFragment extends Fragment {
     private void initActions() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(ListChatActivity.this));
         userList = new ArrayList<>();
     }
 
     private void initViews() {
-        recyclerView = view.findViewById(R.id.rv_user_chat);
+        recyclerView = findViewById(R.id.rv_user_chat);
+        ivAvartar=findViewById(R.id.iv_avartar);
     }
-
 
     private void chatList() {
         mUser = new ArrayList<>();
@@ -83,15 +64,15 @@ public class ChatFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mUser.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    for (ChatList chatlist : userList){
-                        if (user.getId().equals(chatlist.getId())){
+                    for (ChatList chatlist : userList) {
+                        if (user.getId().equals(chatlist.getId())) {
                             mUser.add(user);
                         }
                     }
                 }
-                chatUserAdapter = new ChatUserAdapter(getContext(), mUser);
+                chatUserAdapter = new ChatUserAdapter(ListChatActivity.this, mUser);
                 recyclerView.setAdapter(chatUserAdapter);
             }
 
@@ -125,12 +106,20 @@ public class ChatFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        menu.clear();
-//        inflater.inflate(R.menu.toolbar_chat, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
+    private void getAvartar() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user= snapshot.getValue(User.class);
+                Picasso.with(getApplicationContext()).load(user.getAvartar()).into(ivAvartar);
 
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

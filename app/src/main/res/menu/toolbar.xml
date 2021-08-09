@@ -11,9 +11,9 @@
     <item
         android:iconTint="@color/background_3"
         android:id="@+id/setting"
-        android:icon="@drawable/ic_baseline_settings_24"
+        android:icon="@drawable/ic_baseline_message_24"
         app:showAsAction="ifRoom|withText"
-        android:title="Setting">
+        android:title="Message">
 
     </item>
 </menu>

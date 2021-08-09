@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,12 +26,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
+import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.PostAdapter;
 import com.poly.photos.model.Post;
 import com.poly.photos.view.dialog.PostDialog;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
@@ -37,11 +44,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private View view;
     private PostAdapter postAdapter;
     private StorageReference storageReference;
-    private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
     private List<Post> postList;
     private List<String> followingList;
     private ShimmerFrameLayout shimmerFrameLayout;
-
+    private CircleImageView ivAvartar;
+    private Button btnPost;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,8 +66,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         initAction();
 //        checkFollowing();
         showPost();
+        getAvartar();
     }
-
 
 
     private void initAction() {
@@ -71,20 +79,46 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(layoutManager);
         postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
+        btnPost.setOnClickListener(this);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
     }
 
     private void initViews() {
 
         recyclerView = view.findViewById(R.id.rv_post);
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
-        auth = FirebaseAuth.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+        btnPost = view.findViewById(R.id.btn_post);
+        ivAvartar=view.findViewById(R.id.iv_avartar);
 
     }
 
+    private void getAvartar() {
+        DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+
+        profile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                    Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
 
     private void showPost() {
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
