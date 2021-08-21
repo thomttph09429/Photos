@@ -119,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.action_account);
             return;
         }
+        if (navController.getCurrentDestination().getId() == R.id.action_serach) {
+            navController.navigate(R.id.action_home);
+            return;
+        }
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;

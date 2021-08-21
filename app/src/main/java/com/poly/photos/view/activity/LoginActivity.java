@@ -88,26 +88,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void login() {
         String email = edtEmail.getText().toString();
         String pass = edtPass.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            edtEmail.setError("Email is require.");
-            return;
-        } else if (TextUtils.isEmpty(pass)) {
-            edtPass.setError("Password is require.");
-            return;
-        }
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(pass)){
+            Toast.makeText(LoginActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
+        }else {
+showProgress();
+
             auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
+                        dimissProgress();
                         Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
                     } else {
+                        dimissProgress();
                         Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
                     }
-                    finish();
+
                 }
             });
-
+        }
 
     }
 }

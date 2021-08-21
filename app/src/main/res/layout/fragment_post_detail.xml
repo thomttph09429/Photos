@@ -7,7 +7,6 @@
     tools:context=".view.fragment.PostDetailFragment">
 
     <TextView
-        android:text="thom"
         android:id="@+id/tv_title"
         android:textSize="15sp"
         android:fontFamily="@font/futuramedium"

@@ -125,6 +125,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
             case R.id.iv_close:
                 ivPhoto.setVisibility(View.GONE);
                 ivClose.setVisibility(View.GONE);
+                uriImage=null;
                 break;
             default:
                 break;
@@ -151,8 +152,9 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     }
 
     private void upLoadFile() {
-        showProgress();
         if (uriImage != null) {
+            showProgress();
+
             final StorageReference fileReference = storageRef.child(System.currentTimeMillis()
                     + "." + getFileExtension(uriImage));
 
@@ -185,11 +187,11 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                         reference.child(postid).setValue(hashMap);
                         dimissProgress();
                         dismiss();
-                        Toast.makeText(getActivity(), "Oke rồi", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Oke!!", Toast.LENGTH_SHORT).show();
 
 
                     } else {
-                        Toast.makeText(getContext(), "gòi xong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Sorry!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

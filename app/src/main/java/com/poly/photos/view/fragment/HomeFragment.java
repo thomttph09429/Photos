@@ -64,8 +64,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initViews();
         initAction();
-//        checkFollowing();
-        showPost();
+        checkFollowing();
+//        showPost();
         getAvartar();
     }
 
@@ -125,13 +125,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 postList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-//                    for (String id : followingList) {
-//                        if (post.getPublisher().equals(id)) {
-//                            postList.add(post);
-//
-//                        }
-//                    }
-                    postList.add(post);
+                    for (String id : followingList) {
+                        if (post.getPublisher().equals(id)) {
+                            postList.add(post);
+
+                        }
+                    }
+//                    postList.add(post);
                 }
                 postAdapter.notifyDataSetChanged();
 
@@ -156,29 +156,29 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-//    private void checkFollowing() {
-//        followingList = new ArrayList<>();
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
-//                .getReference("Follow").child(FirebaseAuth.getInstance().getCurrentUser()
-//                        .getUid()).child("following");
-//
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    followingList.add(dataSnapshot.getKey());
-//                    showPost();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//    }
+    private void checkFollowing() {
+        followingList = new ArrayList<>();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("Follow").child(FirebaseAuth.getInstance().getCurrentUser()
+                        .getUid()).child("following");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    followingList.add(dataSnapshot.getKey());
+                }
+                showPost();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
     @Override
     public void onClick(View v) {

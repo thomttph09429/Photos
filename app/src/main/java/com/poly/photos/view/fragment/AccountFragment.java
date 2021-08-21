@@ -101,7 +101,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         getMyPost();
         SharedPreferences prefs = getContext().getSharedPreferences("name", MODE_PRIVATE);
         profileid = prefs.getString("profileid", "none");
-        Log.e("thanh cong", "thnah cong" + profileid);
+        Log.e("Accountthanh cong", "thnah cong" + profileid);
     }
 
     public void initAction() {
@@ -211,12 +211,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
                     tvName.setText(user.getName());
-                    if (user.getAvartar().equals("default")) {
-                        ivAvartar.setImageResource(R.drawable.sky);
-                    } else {
                         Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
-
-                    }
                     Picasso.with(getContext()).load(user.getCover()).fit().centerCrop().into(ivCover);
 
 

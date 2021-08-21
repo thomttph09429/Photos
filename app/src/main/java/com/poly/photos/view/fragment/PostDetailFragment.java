@@ -81,7 +81,7 @@ public class PostDetailFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                tvTitle.setText("Bài viết của " + user.getName());
+//                tvTitle.setText("Bài viết của " + user.getName());
 
 
             }

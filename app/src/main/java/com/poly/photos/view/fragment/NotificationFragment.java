@@ -86,7 +86,7 @@ public class NotificationFragment extends Fragment {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Notification notification = dataSnapshot.getValue(Notification.class);
                         notificationList.add(notification);
-                        Log.e("thanh cong", " thong bao la " + notification.getPostId());
+                        Log.e("Notificationfragment", " thong bao la " + notification.getPostId());
 
                     }
                     Collections.reverse(notificationList);

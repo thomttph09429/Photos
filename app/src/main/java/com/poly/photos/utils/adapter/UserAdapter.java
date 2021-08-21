@@ -2,6 +2,7 @@ package com.poly.photos.utils.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder> {
 
@@ -61,19 +65,27 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
 
         holder.btnFollow.setVisibility(View.VISIBLE);
         isFollowing(user.getId(), holder.btnFollow);
-        if (user.getId() .equals( firebaseUser.getUid())) {
-            holder.btnFollow.setVisibility(View.GONE);
-
+        if (user.getId().equals(firebaseUser.getUid())) {
+            holder.btnFollow.setText("following");
+            holder.btnFollow.setVisibility(View.INVISIBLE);
+            FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
+                    .child("following").child(user.getId()).setValue(true);
+            FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getId())
+                    .child("Follows").child(firebaseUser.getUid()).setValue(true);
         }
         holder.itemView.setOnClickListener(v -> {
-            Intent intent=new Intent(context, MessageActivity.class);
+            Intent intent = new Intent(context, MessageActivity.class);
             intent.putExtra("userId", user.getId());
             context.startActivity(intent);
 
         });
+        holder.ivAvartar.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
+            editor.putString("profileid", user.getId());
+            editor.apply();
+            Navigation.createNavigateOnClickListener(R.id.action_profile).onClick(holder.ivAvartar);
 
-
-
+        });
 
 
         holder.btnFollow.setOnClickListener(v -> {
@@ -82,7 +94,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
                         .child("following").child(user.getId()).setValue(true);
                 FirebaseDatabase.getInstance().getReference().child("Follow").child(user.getId())
                         .child("Follows").child(firebaseUser.getUid()).setValue(true);
-//                addNotification(user.getId());
+                addNotification(user.getId());
 
 
             }else {
@@ -133,13 +145,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
             }
         });
     }
-//    private void addNotification(String userId){
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
-//        HashMap<String,Object> hashMap=new HashMap<>();
-//        hashMap.put("userId", firebaseUser.getUid());
-//        hashMap.put("text","đã theo dõi bạn");
-//        hashMap.put("postId","");
-//        hashMap.put("isPost", false);
-//        reference.push().setValue(hashMap);
-//    }
+    private void addNotification(String userId){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notifications").child(userId);
+        HashMap<String,Object> hashMap=new HashMap<>();
+        hashMap.put("userId", firebaseUser.getUid());
+        hashMap.put("text","đã theo dõi bạn");
+        hashMap.put("postId","");
+        hashMap.put("isPost", false);
+        reference.push().setValue(hashMap);
+    }
 }
