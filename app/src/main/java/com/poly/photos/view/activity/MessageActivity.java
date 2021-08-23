@@ -1,16 +1,25 @@
 package com.poly.photos.view.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,8 +40,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.poly.photos.MainActivity;
+import com.poly.photos.NotificationMessage.Data;
+import com.poly.photos.NotificationMessage.MyRespone;
+import com.poly.photos.NotificationMessage.Retrofit.APIService;
+import com.poly.photos.NotificationMessage.Retrofit.Client;
+import com.poly.photos.NotificationMessage.Sender;
+import com.poly.photos.NotificationMessage.Token;
 import com.poly.photos.R;
 import com.poly.photos.model.Chat;
 import com.poly.photos.model.User;
@@ -45,6 +62,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tvUserName;
@@ -52,13 +72,15 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     String userId;
     private EditText edtMessage;
     private ImageView ivSend;
-    private  CircleImageView ivAvartar;
+    private CircleImageView ivAvartar;
     private RecyclerView rvMessage;
     private MessageAdapter messageAdapter;
     private List<Chat> chatList;
     private FirebaseUser firebaseUser;
     private ValueEventListener seenListener;
     private DatabaseReference databaseReference;
+    private APIService apiService;
+    private boolean notifi = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +100,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(MessageActivity.this, ListChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             finish();
         });
+        apiService = Client.getInstance("https://fcm.googleapis.com/").create(APIService.class);
     }
 
     private void initViews() {
@@ -176,15 +199,79 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 .child(firebaseUser.getUid());
         chatRefReceiver.child("id").setValue(firebaseUser.getUid());
 
+        String msg = message;
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (notifi) {
+                    sendNotifiaction(receiver, user.getName(), msg);
+
+                } else {
+                    notifi = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
+
+    private void sendNotifiaction(String receiver, final String userName, final String message){
+        intent = getIntent();
+    String    userId = intent.getStringExtra("userId");
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(firebaseUser.getUid(), R.drawable.sky, userName+": "+message, "New Message",
+                            userId);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender).enqueue(new Callback<MyRespone>() {
+                        @Override
+                        public void onResponse(Call<MyRespone> call, Response<MyRespone> response) {
+                            if (response.code() == 200){
+                                if (response.body().success != 1){
+                                    Toast.makeText(MessageActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MyRespone> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void checkSend() {
+        notifi=true;
+
         String message = edtMessage.getText().toString();
         if (!message.equals("")) {
             sendMessage(firebaseUser.getUid(), userId, message);
 
         }
         edtMessage.setText("");
+
     }
 
     private void readMessage(String myId, String userId, String urlAvartar) {

@@ -60,7 +60,9 @@ dependencies {
     // notification when send message
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-messaging:17.3.1'
+//
+    implementation "androidx.core:core:1.6.0"
 
 
 

@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.poly.photos.NotificationMessage.Token;
 import com.poly.photos.R;
 import com.poly.photos.model.ChatList;
 import com.poly.photos.model.User;
@@ -42,6 +44,7 @@ public class ListChatActivity extends AppCompatActivity {
         initActions();
         getAvartar();
         addUser();
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
     }
 
@@ -104,6 +107,11 @@ public class ListChatActivity extends AppCompatActivity {
             }
         });
 
+    }
+    private  void  updateToken(String tokens){
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token = new Token(tokens);
+        reference.child(firebaseUser.getUid()).setValue(token);
     }
 
     private void getAvartar() {
