@@ -6,7 +6,7 @@
         />
     <solid
 
-        android:color="@android:color/white" />
+        android:color="@color/background_4" />
 
 
 

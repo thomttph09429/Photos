@@ -19,7 +19,7 @@
         android:layout_height="40dp"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"
-      />
+        android:background="@android:color/transparent" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,6 +29,7 @@
         android:layout_toRightOf="@+id/iv_avartar"
         android:fontFamily="@font/hero_new_extrabold"
         android:text="Nhắn tin"
+        android:background="@android:color/transparent"
         android:textSize="16dp" />
 
     <Button
@@ -39,7 +40,7 @@
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:background="@drawable/background_border"
+android:textColorHint="@color/white"        android:background="@drawable/btn_share"
         android:drawableLeft="@drawable/ic_baseline_search_24"
         android:gravity="left|center"
         android:hint="Tìm kiếm "

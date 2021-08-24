@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,11 +41,14 @@ import com.google.firebase.storage.UploadTask;
 import com.poly.photos.MainActivity;
 import com.poly.photos.R;
 import com.poly.photos.model.Post;
+import com.poly.photos.model.User;
 import com.poly.photos.utils.ProgressBarDialog;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
@@ -53,13 +57,13 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
     private EditText edtWrite;
     private LinearLayout shareLocation, sharePhoto;
     private ImageView btnPost, ivPhoto, ivClose;
+    private CircleImageView ivAvartar;
     private Uri uriImage;
     private View view;
     private StorageReference storageRef;
-    //    private DatabaseReference mDatabaseRef;
     private StorageTask uploadTask;
     private StorageReference storageReference;
-    private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
 
 
     public PostDialog() {
@@ -80,13 +84,14 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
             view = inflater.inflate(R.layout.dialog_post, container);
 
         }
-
+        getInforUser();
         initViews();
         initAction();
         return view;
     }
 
     private void initViews() {
+        ivAvartar = view.findViewById(R.id.iv_avartar);
         edtWrite = view.findViewById(R.id.edt_write);
         shareLocation = view.findViewById(R.id.lnl_share_location);
         sharePhoto = view.findViewById(R.id.lnl_share_photo);
@@ -104,8 +109,24 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
         ivClose.setOnClickListener(this);
         storageRef = FirebaseStorage.getInstance().getReference("Posts");
         storageReference = FirebaseStorage.getInstance().getReference();
-        auth = FirebaseAuth.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+    }
+
+    private void getInforUser() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
@@ -125,7 +146,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
             case R.id.iv_close:
                 ivPhoto.setVisibility(View.GONE);
                 ivClose.setVisibility(View.GONE);
-                uriImage=null;
+                uriImage = null;
                 break;
             default:
                 break;
@@ -182,7 +203,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                         hashMap.put("description", edtWrite.getText().toString());
                         hashMap.put("postid", postid);
                         hashMap.put("postimage", miUrlOk);
-                        hashMap.put("publisher", auth.getCurrentUser().getUid());
+                        hashMap.put("publisher", firebaseUser.getUid());
 
                         reference.child(postid).setValue(hashMap);
                         dimissProgress();

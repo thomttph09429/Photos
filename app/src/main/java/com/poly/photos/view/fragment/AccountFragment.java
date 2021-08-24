@@ -119,6 +119,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         rcMyPhoto.setLayoutManager(layoutManager);
         myPhotoAdapter = new MyPhotoAdapter(postList, getContext());
         rcMyPhoto.setAdapter(myPhotoAdapter);
+//        ivAvartar.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
 
 
     }

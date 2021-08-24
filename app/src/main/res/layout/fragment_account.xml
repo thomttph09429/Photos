@@ -29,6 +29,7 @@
                 android:layout_toRightOf="@id/iv_avartar"
                 android:layout_marginLeft="70dp"
                 android:layout_marginTop="20dp"
+                android:backgroundTint="#888888"
                 android:src="@drawable/ic_more" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -38,7 +39,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
-                android:backgroundTint="@color/purple_500" />
+                android:backgroundTint="@android:color/transparent" />
 
             <ImageButton
                 android:id="@+id/ib_select_avartar"
@@ -72,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/arial_bold"
                 android:gravity="center"
-                android:text="Trương ngọc thươm" />
+                android:text="Trương ngọc Thơm" />
 
             <ImageButton
                 android:id="@+id/ib_edit"

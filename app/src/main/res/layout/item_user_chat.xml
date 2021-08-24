@@ -24,6 +24,7 @@
         android:layout_weight="2"
         android:gravity="center"
         android:textSize="14dp"
+        android:background="@android:color/transparent"
         android:text="truong ngoc thom " />
 
 
@@ -39,6 +40,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginLeft="-16dp"
         android:layout_toRightOf="@id/iv_avartar"
+        android:background="@android:color/transparent"
         android:layout_toEndOf="@id/iv_avartar"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="12dp"
@@ -48,6 +50,7 @@
         app:civ_border_color="#05df29"
         android:id="@+id/iv_online"
         android:visibility="visible"
+        android:background="@android:color/transparent"
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="-16dp"
@@ -62,6 +65,7 @@
         android:id="@+id/tv_last_message"
         android:textColor="@color/background_3"
         android:layout_marginLeft="10dp"
+        android:background="@android:color/transparent"
         android:maxLines="1"/>
 
 </RelativeLayout>

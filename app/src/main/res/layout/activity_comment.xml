@@ -8,9 +8,10 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_500" />
+        android:background="@android:color/transparent" />
 
 
     <TextView
@@ -85,7 +86,8 @@
             android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="9dp"
-            android:src="@drawable/portrait" />
+            android:backgroundTint="@android:color/transparent"
+      />
 
 
         <ImageButton
@@ -108,7 +110,7 @@
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@id/ib_send"
             android:layout_toRightOf="@+id/iv_avartar"
-            android:hint="Viết gì đó">
+            android:hint="Type here...">
 
 
         </EditText>

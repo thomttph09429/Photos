@@ -20,7 +20,7 @@
                 android:id="@+id/iv_cover"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/sky" />
+            />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_avartar"
@@ -29,8 +29,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="100dp"
-                android:backgroundTint="@color/purple_500"
-                android:src="@drawable/portrait" />
+                android:backgroundTint="@android:color/transparent"
+               />
 
 
         </RelativeLayout>
@@ -110,7 +110,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_border"
-                    android:drawableLeft="@drawable/ic_baseline_message_24"
+                    android:drawableLeft="@drawable/ic_chats"
                     android:text="Nhắn tin" />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rc_all_photo"

@@ -2,6 +2,6 @@
     <!--  Fill the background with a solid color  -->
     <item android:drawable="@color/purple_500"/>
     <item>
-        <bitmap android:gravity="center" android:src="@drawable/sky"/>
+        <bitmap android:gravity="center" android:src="@drawable/pineapples"/>
     </item>
 </layer-list>

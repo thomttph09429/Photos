@@ -12,17 +12,20 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/background_border"
         android:gravity="center"
+        android:background="@drawable/btn_share"
         android:orientation="horizontal"
         android:padding="7dp">
 
         <ImageView
             android:layout_width="24dp"
+            android:background="@android:color/transparent"
             android:layout_height="24dp"
             android:src="@drawable/ic_baseline_search_24" />
 
         <EditText
+            android:textSize="14sp"
+            android:textColorHint="@color/white"
             android:layout_marginLeft="3dp"
             android:id="@+id/edt_search_user"
             android:layout_width="match_parent"

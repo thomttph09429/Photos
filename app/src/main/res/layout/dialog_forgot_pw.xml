@@ -13,9 +13,9 @@
         android:padding="15dp">
 
         <TextView
+            android:fontFamily="@font/arial_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/arial"
             android:gravity="center"
             android:text="Reset password"
             android:textSize="20sp" />
@@ -27,9 +27,13 @@
             android:textSize="16sp" />
 
         <EditText
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:background="@android:color/transparent"
             android:id="@+id/edt_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:hint="Enter your email" />
 
         <LinearLayout
