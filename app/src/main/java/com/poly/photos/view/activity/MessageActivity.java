@@ -206,7 +206,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
                 if (notifi) {
-                    sendNotifiaction(receiver, user.getName(), msg);
+                    sendNotifiaction(receiver, user.getName(), msg, user.getAvartar());
 
                 } else {
                     notifi = false;
@@ -223,7 +223,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    private void sendNotifiaction(String receiver, final String userName, final String message){
+    private void sendNotifiaction(String receiver, final String userName, final String message, String avartar){
         intent = getIntent();
     String    userId = intent.getStringExtra("userId");
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
@@ -233,8 +233,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(firebaseUser.getUid(), R.drawable.sky, userName+": "+message, "New Message",
-                            userId);
+                    Data data = new Data(firebaseUser.getUid(), R.drawable.pineapples, userName+": "+message, "Bạn có tin nhắn mới ",
+                            userId,avartar );
 
                     Sender sender = new Sender(data, token.getToken());
 
@@ -263,11 +263,11 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
     private void checkSend() {
-        notifi=true;
 
         String message = edtMessage.getText().toString();
         if (!message.equals("")) {
             sendMessage(firebaseUser.getUid(), userId, message);
+            notifi=true;
 
         }
         edtMessage.setText("");
@@ -317,13 +317,22 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         hashMap.put("status", status);
         reference.updateChildren(hashMap);
     }
-
+    private  void currentUser(String userId){
+        SharedPreferences.Editor editor= getSharedPreferences("name", MODE_PRIVATE).edit();
+        editor.putString("currentUser",userId);
+        editor.apply();
+    }
     @Override
     protected void onResume() {
         super.onResume();
         status("online");
+        currentUser(userId);
     }
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        currentUser("none");
+    }
 
     @Override
     public void onBackPressed() {

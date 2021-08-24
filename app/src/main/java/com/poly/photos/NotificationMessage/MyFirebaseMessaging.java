@@ -1,40 +1,51 @@
 package com.poly.photos.NotificationMessage;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.poly.photos.view.activity.MessageActivity;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         String sented = remoteMessage.getData().get("sented");
+        String user = remoteMessage.getData().get("user");
+
+        SharedPreferences preferences = getSharedPreferences("name", MODE_PRIVATE);
+        String currentUser = preferences.getString("currentUser", "none");
+
+
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && sented.equals(firebaseUser.getUid())) {
-            sendNotification(remoteMessage);
+            if (!currentUser.equals(user)){
+                sendNotification(remoteMessage);
+
+            }
         }
 
 
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
-
+        String avartar = remoteMessage.getData().get("avartar");
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
@@ -55,7 +66,16 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(defaultSound)
+                .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent);
+        try {
+            Bitmap bmp = Picasso.with(getApplicationContext()).load(avartar).get();
+            builder.setLargeIcon(bmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         int i = 0;

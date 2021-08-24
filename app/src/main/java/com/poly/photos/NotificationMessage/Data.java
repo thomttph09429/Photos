@@ -6,6 +6,24 @@ public class Data {
     private String body;
     private String title;
     private String sented;
+    private  String avartar;
+
+    public Data(String user, int icon, String body, String title, String sented, String avartar) {
+        this.user = user;
+        this.icon = icon;
+        this.body = body;
+        this.title = title;
+        this.sented = sented;
+        this.avartar = avartar;
+    }
+
+    public String getAvartar() {
+        return avartar;
+    }
+
+    public void setAvartar(String avartar) {
+        this.avartar = avartar;
+    }
 
     public String getUser() {
         return user;
