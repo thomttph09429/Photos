@@ -13,6 +13,7 @@
         android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:text="Hello world"
+        android:textSize="16sp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/iv_avartar"
         android:layout_marginLeft="5dp"

@@ -16,7 +16,7 @@
             android:layout_gravity="center"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@color/colorGrey" />
+            android:background="@color/background_4" />
 
         <LinearLayout
             android:layout_marginLeft="20dp"
@@ -28,7 +28,7 @@
                 android:layout_width="160dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/colorGrey" />
+                android:background="@drawable/background_comment" />
 
             <TextView
                 android:layout_width="220dp"
@@ -36,7 +36,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:background="@color/colorGrey" />
+                android:background="@drawable/background_comment" />
         </LinearLayout>
 
     </LinearLayout>

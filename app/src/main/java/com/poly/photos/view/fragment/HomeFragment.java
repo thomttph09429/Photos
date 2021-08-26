@@ -64,7 +64,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         if (view == null)
             view = inflater.inflate(R.layout.fragment_home, container, false);
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkFollowing();
     }
 
     @Override
@@ -72,8 +79,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
         initViews();
         initAction();
-        checkFollowing();
-//        showPost();
         getAvartar();
     }
 
@@ -152,11 +157,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                shimmerFrameLayout.stopShimmer();
-                shimmerFrameLayout.hideShimmer();
-                shimmerFrameLayout.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
 
 
             }

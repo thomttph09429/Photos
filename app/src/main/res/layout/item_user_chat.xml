@@ -4,14 +4,17 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
+    android:background="@drawable/btn_share"
     android:padding="15dp"
+    android:layout_marginTop="10dp"
     android:weightSum="3">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:backgroundTint="@android:color/transparent"
         android:id="@+id/iv_avartar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/ic_account_circle_24" />
+        android:src="@drawable/pineapples" />
 
     <TextView
         android:fontFamily="@font/arial_bold"
@@ -63,7 +66,7 @@
         android:layout_below="@id/tv_user_name"
         android:layout_toRightOf="@id/iv_avartar"
         android:id="@+id/tv_last_message"
-        android:textColor="@color/background_3"
+        android:textColor="@color/white"
         android:layout_marginLeft="10dp"
         android:background="@android:color/transparent"
         android:maxLines="1"/>

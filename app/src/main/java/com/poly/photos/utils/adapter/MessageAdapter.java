@@ -56,11 +56,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         }
         if (position == chatList.size() - 1) {
-            if (!chat.isSeen()) {
-                holder.tvSeen.setText("Đã nhận");
-
-            } else {
+            if (chat.getIsSeen().equals("true")) {
                 holder.tvSeen.setText("Đã xem");
+
+            } else if (chat.getIsSeen().equals("false")){
+                holder.tvSeen.setText("Đã gửi");
             }
         }else {
             holder.tvSeen.setVisibility(View.GONE);

@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:background="@drawable/chat_right"
         android:layout_alignParentRight="true"
+        android:textSize="16sp"
         android:padding="8dp"
         android:text="Hello world" />
 

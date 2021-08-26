@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/search"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_baseline_search_24"
         android:iconTint="@color/background_4"
-        android:title="Search">
+        tools:ignore="MenuTitle"
+        >
     </item>
     <item
         android:iconTint="@color/background_3"
-        android:id="@+id/setting"
-        android:icon="@drawable/ic_baseline_message_24"
+        android:id="@+id/chat"
+        android:icon="@drawable/ic_baseline_wechat_24"
         app:showAsAction="ifRoom|withText"
-        android:title="Message">
+        tools:ignore="MenuTitle"
+        app:actionLayout="@layout/custom_unread_message"
+
+
+        >
 
     </item>
 </menu>

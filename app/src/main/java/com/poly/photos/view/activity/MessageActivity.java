@@ -71,7 +71,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     Intent intent;
     String userId;
     private EditText edtMessage;
-    private ImageView ivSend;
+    private Button ivSend;
     private CircleImageView ivAvartar;
     private RecyclerView rvMessage;
     private MessageAdapter messageAdapter;
@@ -155,7 +155,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                     Chat chat = snapshot.getValue(Chat.class);
                     if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId)) {
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("isSeen", true);
+                        hashMap.put("isSeen", "true");
                         snapshot.getRef().updateChildren(hashMap);
                     }
                 }
@@ -174,7 +174,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         hashMap.put("sender", sender);
         hashMap.put("receiver", receiver);
         hashMap.put("message", message);
-        hashMap.put("isSeen", false);
+        hashMap.put("isSeen", "false");
         reference.child("Chats").push().setValue(hashMap);
         final DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("ChatList")
                 .child(firebaseUser.getUid())
@@ -243,7 +243,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                         public void onResponse(Call<MyRespone> call, Response<MyRespone> response) {
                             if (response.code() == 200){
                                 if (response.body().success != 1){
-                                    Toast.makeText(MessageActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(MessageActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

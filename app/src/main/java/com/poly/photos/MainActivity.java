@@ -19,13 +19,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.poly.photos.model.Chat;
 import com.poly.photos.view.activity.ListChatActivity;
 
 import java.util.HashMap;
@@ -38,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private DatabaseReference reference;
     private boolean doubleBackToExitPressedOnce = false;
+    private TextView tvChatBadge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +91,67 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar, menu);
+        final MenuItem menuItem = menu.findItem(R.id.chat);
+        View actionView = menuItem.getActionView();
+        tvChatBadge = (TextView) actionView.findViewById(R.id.tv_chat_badge);
+        setupBadge();
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+
         return true;
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.search:
+                navController.navigate(R.id.action_serach);
+                return true;
+            case R.id.chat:
+                startActivity(new Intent(MainActivity.this, ListChatActivity.class));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+
+    }
+
+    private void setupBadge() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int unRead = 0;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Chat chat = dataSnapshot.getValue(Chat.class);
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getIsSeen().equals("false")) {
+                        unRead++;
+                    }
+                }
+                if (unRead == 0) {
+                    if (tvChatBadge.getVisibility() != View.GONE) {
+                        tvChatBadge.setVisibility(View.GONE);
+                    }
+                } else {
+                    tvChatBadge.setText(unRead+"");
+                    if (tvChatBadge.getVisibility() != View.VISIBLE) {
+                        tvChatBadge.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -135,27 +200,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.search:
-                navController.navigate(R.id.action_serach);
-                return true;
-            case R.id.setting:
-                startActivity(new Intent(MainActivity.this, ListChatActivity.class));
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -179,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         status("offline");
-    }
 
+    }
 }

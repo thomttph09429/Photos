@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_500" />
+        android:background="@color/background_1" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avartar"
@@ -27,33 +27,33 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/iv_avartar"
-        android:fontFamily="@font/hero_new_extrabold"
-        android:text="Nhắn tin"
         android:background="@android:color/transparent"
+        android:fontFamily="@font/hero_new_extrabold"
+        android:text="Chats"
         android:textSize="16dp" />
 
     <Button
-        android:padding="5dp"
         android:id="@+id/btn_search"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-android:textColorHint="@color/white"        android:background="@drawable/btn_share"
+        android:background="@drawable/btn_share"
         android:drawableLeft="@drawable/ic_baseline_search_24"
         android:gravity="left|center"
-        android:hint="Tìm kiếm "
-        android:textAllCaps="false" />
+        android:hint="Search "
+        android:padding="5dp"
+        android:textAllCaps="false"
+        android:textColorHint="@color/white" />
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:padding="10dp"
         android:id="@+id/rv_user_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_search"
-        android:layout_marginTop="20dp">
-
+        android:layout_below="@+id/btn_search">
     </androidx.recyclerview.widget.RecyclerView>
 
 
