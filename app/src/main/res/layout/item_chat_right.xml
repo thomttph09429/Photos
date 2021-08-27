@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp">
-    <RelativeLayout
-
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        >
-
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_avartar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/portrait"
-        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/tv_message"
-        android:layout_alignParentEnd="true"
-        android:layout_height="wrap_content"
+        android:id="@+id/tv_time"
         android:layout_width="wrap_content"
-        android:background="@drawable/chat_right"
-        android:layout_alignParentRight="true"
-        android:textSize="16sp"
-        android:padding="8dp"
-        android:text="Hello world" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="hhhhhhhhhhhhhh"
+        android:textColor="@color/background_8"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_time"
+        android:layout_alignParentRight="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_avartar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/portrait"
+            android:visibility="gone" />
 
         <TextView
+            android:id="@+id/tv_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_seen"
-            android:layout_below="@id/tv_message"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:background="@drawable/chat_right"
+            android:padding="8dp"
+            android:maxWidth="270dp"
+            android:text="Hello world"
+            android:textSize="16sp" />
+    </LinearLayout>
 
-    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="fffff"
+        android:textSize="14sp" />
+
 </RelativeLayout>

@@ -12,17 +12,15 @@
         android:orientation="vertical">
 
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
+            app:titleTextColor="@android:color/white">
 
-                app:titleTextColor="@android:color/white">
-
-            </androidx.appcompat.widget.Toolbar>
-
+        </androidx.appcompat.widget.Toolbar>
 
 
         <fragment
@@ -30,18 +28,18 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_below="@+id/toolbar"
+            android:layout_weight="1"
+            android:layout_above="@+id/navigation"
             app:navGraph="@navigation/main_nav" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             app:itemIconTint="@color/purple_700"
-            android:layout_alignParentBottom="true"
-
             app:menu="@menu/main_nav" />
 
     </RelativeLayout>

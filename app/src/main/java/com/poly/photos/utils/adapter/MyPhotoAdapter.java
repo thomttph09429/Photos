@@ -1,6 +1,7 @@
 package com.poly.photos.utils.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.poly.photos.R;
 import com.poly.photos.model.Post;
+import com.poly.photos.view.activity.PostDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -32,6 +34,8 @@ public class MyPhotoAdapter extends RecyclerView.Adapter<MyPhotoAdapter.ImageVie
     @Override
     public MyPhotoAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_photo, parent, false);
+
+
         return new ImageViewHolder(view);
 
 
@@ -40,14 +44,15 @@ public class MyPhotoAdapter extends RecyclerView.Adapter<MyPhotoAdapter.ImageVie
     @Override
     public void onBindViewHolder(@NonNull MyPhotoAdapter.ImageViewHolder holder, int position) {
         final Post post = postList.get(position);
+        holder.ivPostImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
         Picasso.with(context).load(post.getPostimage()).fit().centerInside().into(holder.ivPostImage);
         holder.itemView.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
-            editor.putString("postId", post.getPostid());
-            editor.putString("publisherId", post.getPublisher());
+            Intent intent= new Intent(context, PostDetailActivity.class);
+            intent.putExtra("postId",post.getPostid());
+            intent.putExtra("publisherId", post.getPublisher());
+            context.startActivity(intent);
 
-            editor.apply();
-            Navigation.createNavigateOnClickListener(R.id.action_detail_post).onClick(v);
 
         });
     }

@@ -3,13 +3,30 @@ package com.poly.photos.model;
 public class Post {
     private String postid;
     private String postimage;
+    private String description;
+    private String publisher;
+    private String time;
+
+    public Post(String postid, String postimage, String description, String publisher, String time) {
+        this.postid = postid;
+        this.postimage = postimage;
+        this.description = description;
+        this.publisher = publisher;
+        this.time = time;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public Post() {
     }
 
-    private String description;
 
-    private String publisher;
 
     public String getPostid() {
         return postid;

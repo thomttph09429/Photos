@@ -42,6 +42,7 @@ import com.poly.photos.MainActivity;
 import com.poly.photos.R;
 import com.poly.photos.model.Post;
 import com.poly.photos.model.User;
+import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.utils.ProgressBarDialog;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -204,6 +205,7 @@ public class PostDialog extends DialogFragment implements View.OnClickListener {
                         hashMap.put("postid", postid);
                         hashMap.put("postimage", miUrlOk);
                         hashMap.put("publisher", firebaseUser.getUid());
+                        hashMap.put("time", GlobalUtils.getDateAndTime());
 
                         reference.child(postid).setValue(hashMap);
                         dimissProgress();

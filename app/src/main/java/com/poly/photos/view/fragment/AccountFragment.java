@@ -61,7 +61,7 @@ import static com.poly.photos.utils.GlobalUtils.PICK_IMAGE_REQUES;
 
 
 public class AccountFragment extends Fragment implements View.OnClickListener {
-    private TextView tvAllPhoto, tvName;
+    private TextView tvAllPhoto, tvName, tvNFollow;
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
@@ -99,6 +99,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         showImage();
         nPost();
         getMyPost();
+        getNFollow();
         SharedPreferences prefs = getContext().getSharedPreferences("name", MODE_PRIVATE);
         profileid = prefs.getString("profileid", "none");
         Log.e("Accountthanh cong", "thnah cong" + profileid);
@@ -119,9 +120,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         rcMyPhoto.setLayoutManager(layoutManager);
         myPhotoAdapter = new MyPhotoAdapter(postList, getContext());
         rcMyPhoto.setAdapter(myPhotoAdapter);
-//        ivAvartar.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
     }
 
@@ -135,6 +134,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
         rcMyPhoto = view.findViewById(R.id.rc_all_photo);
         ivSetting = view.findViewById(R.id.iv_setting);
         tvAllPhoto = view.findViewById(R.id.tv_all_photo);
+        tvNFollow = view.findViewById(R.id.tv_nfollowers);
 
     }
 
@@ -213,7 +213,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
                     tvName.setText(user.getName());
-                        Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
+                    Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
                     Picasso.with(getContext()).load(user.getCover()).fit().centerCrop().into(ivCover);
 
 
@@ -366,6 +366,22 @@ public class AccountFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+    }
+
+    private void getNFollow() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow").child(firebaseUser.getUid()).child("following");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tvNFollow.setText("" + snapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override

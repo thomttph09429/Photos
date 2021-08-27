@@ -172,10 +172,7 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(R.id.action_home);
             return;
         }
-        if (navController.getCurrentDestination().getId() == R.id.action_detail_post) {
-            navController.navigate(R.id.action_home);
-            return;
-        }
+
         if (navController.getCurrentDestination().getId() == R.id.action_notification) {
             navController.navigate(R.id.action_home);
             return;

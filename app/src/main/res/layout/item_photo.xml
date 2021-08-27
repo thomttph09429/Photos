@@ -7,7 +7,7 @@
     <ImageView
         android:src="@drawable/sky"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="150dp"
         android:id="@+id/iv_post_image"
         android:scaleType="centerInside"
         android:layout_margin="1dp"/>

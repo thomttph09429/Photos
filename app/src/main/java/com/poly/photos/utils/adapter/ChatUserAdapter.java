@@ -32,7 +32,7 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
 
     private Context context;
     private List<User> userList;
-    private  String lastMessages;
+    private String lastMessages;
 
     public ChatUserAdapter(Context context, List<User> userList) {
         this.context = context;
@@ -51,25 +51,22 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
     @Override
     public void onBindViewHolder(@NonNull ChatUserAdapter.ChatUserViewholder holder, int position) {
         final User user = userList.get(position);
-        firebaseUser=FirebaseAuth.getInstance().getCurrentUser();
-        checkLastMsg(user.getId(),holder.tvLastMsg);
-
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        checkLastMsg(user.getId(), holder.tvLastMsg);
+        isSeen(holder.tvUserName, holder.tvLastMsg);
 
         holder.tvUserName.setText(user.getName());
 
-            Picasso.with(context).load(user.getAvartar()).into(holder.ivAvartar);
+        Picasso.with(context).load(user.getAvartar()).into(holder.ivAvartar);
 
-            if (user.getStatus().equals("online")) {
-                holder.ivOnline.setVisibility(View.VISIBLE);
-                holder.ivOffline.setVisibility(View.GONE);
+        if (user.getStatus().equals("online")) {
+            holder.ivOnline.setVisibility(View.VISIBLE);
+            holder.ivOffline.setVisibility(View.GONE);
 
-            } else {
-                holder.ivOnline.setVisibility(View.GONE);
-                holder.ivOffline.setVisibility(View.VISIBLE);
-            }
-
-
-
+        } else {
+            holder.ivOnline.setVisibility(View.GONE);
+            holder.ivOffline.setVisibility(View.VISIBLE);
+        }
 
 
         holder.itemView.setOnClickListener(v -> {
@@ -79,21 +76,48 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
 
         });
     }
-    private void checkLastMsg(String userId, TextView tvLastMessage){
-        lastMessages="default";
+
+    private void isSeen(TextView tvUsername, TextView tvLastMessage) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    Chat chat= dataSnapshot.getValue(Chat.class);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Chat chat = dataSnapshot.getValue(Chat.class);
+                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getIsSeen().equals("true") ||
+                            chat.getSender().equals(firebaseUser.getUid()) && chat.getIsSeen().equals("true")
+                    ) {
+                        tvUsername.setTextColor(context.getResources().getColor(R.color.background_8));
+                        tvLastMessage.setTextColor(context.getResources().getColor(R.color.background_8));
+                    }else {
+                        tvUsername.setTextColor(context.getResources().getColor(R.color.white));
+                        tvLastMessage.setTextColor(context.getResources().getColor(R.color.white));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void checkLastMsg(String userId, TextView tvLastMessage) {
+        lastMessages = "default";
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Chat chat = dataSnapshot.getValue(Chat.class);
                     if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId) ||
                             chat.getReceiver().equals(userId) && chat.getSender().equals(firebaseUser.getUid())) {
                         lastMessages = chat.getMessage();
                     }
                 }
-                switch (lastMessages){
-                    case  "default":
+                switch (lastMessages) {
+                    case "default":
                         tvLastMessage.setText("Nhắn tin nào");
                         break;
 

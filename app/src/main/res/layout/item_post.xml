@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
     card_view:cardCornerRadius="5dp">
 
 
@@ -12,42 +11,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/iv_avartar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:paddingLeft="10dp"
-                />
+                    android:paddingLeft="10dp" />
 
-                <TextView
-                    android:id="@+id/tv_user_name"
+                <LinearLayout
+                    android:id="@+id/top"
+                    android:layout_toRightOf="@+id/iv_avartar"
+                    android:layout_marginLeft="7dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/arial_bold"
-                   />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:paddingTop="5dp"
+                        android:id="@+id/tv_user_name"
+                        android:textSize="18sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/futuramedium" />
+                    <TextView
+                        android:layout_marginTop="-5dp"
+                        android:textColor="@color/background_8"
+                        android:id="@+id/tv_time"
+                        android:textSize="14sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
 
 
-            </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/middle"
+                android:layout_below="@+id/top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
+                    android:text="metmoi"
                     android:id="@+id/tv_state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,12 +64,14 @@
                     />
 
                 <ImageView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/iv_photo"
                     android:layout_width="match_parent"
                     android:layout_height="500dp" />
             </LinearLayout>
 
             <LinearLayout
+                android:layout_below="@+id/middle"
                 android:id="@+id/select"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,6 +127,5 @@
                     android:src="@drawable/ic_more"
                     />
             </LinearLayout>
-        </LinearLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

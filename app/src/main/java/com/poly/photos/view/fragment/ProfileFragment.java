@@ -47,7 +47,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.content.Context.MODE_PRIVATE;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    private TextView tvAllPhoto, tvName;
+    private TextView tvAllPhoto, tvName, tvNFollow;
+
     private FirebaseUser firebaseUser;
     private Button btnSendMessage;
     private ImageView ivCover;
@@ -78,6 +79,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         showImage();
         nPost();
         getMyPost();
+        getNFollow();
 
     }
     public void initViews() {
@@ -85,7 +87,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         ivAvartar = view.findViewById(R.id.iv_avartar);
         ivCover = view.findViewById(R.id.iv_cover);
         rcMyPhoto = view.findViewById(R.id.rc_all_photo);
-
+        tvNFollow = view.findViewById(R.id.tv_nfollowers);
         tvAllPhoto = view.findViewById(R.id.tv_all_photo);
         btnSendMessage= view.findViewById(R.id.btn_send_message);
 
@@ -159,7 +161,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
+    private void getNFollow() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow").child(firebaseUser.getUid()).child("following");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tvNFollow.setText("" + snapshot.getChildrenCount());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
     private void getMyPost() {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");

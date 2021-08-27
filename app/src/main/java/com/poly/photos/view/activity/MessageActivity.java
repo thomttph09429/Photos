@@ -52,6 +52,7 @@ import com.poly.photos.NotificationMessage.Token;
 import com.poly.photos.R;
 import com.poly.photos.model.Chat;
 import com.poly.photos.model.User;
+import com.poly.photos.utils.GlobalUtils;
 import com.poly.photos.utils.adapter.MessageAdapter;
 import com.poly.photos.view.fragment.ProfileFragment;
 import com.squareup.picasso.Picasso;
@@ -175,6 +176,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         hashMap.put("receiver", receiver);
         hashMap.put("message", message);
         hashMap.put("isSeen", "false");
+        hashMap.put("time", GlobalUtils.getDateAndTime());
         reference.child("Chats").push().setValue(hashMap);
         final DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("ChatList")
                 .child(firebaseUser.getUid())

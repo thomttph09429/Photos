@@ -1,11 +1,13 @@
 package com.poly.photos.utils.adapter;
 
 import android.content.Context;
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,20 +51,27 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageAdapter.MessageViewHolder holder, int position) {
         Chat chat = chatList.get(position);
         holder.showMessage.setText(chat.getMessage());
-        if (urlAvartar.equals("default")) {
-            holder.ivAvartar.setImageResource(R.drawable.sky);
-        } else {
-            Picasso.with(context).load(urlAvartar).into(holder.ivAvartar);
+        Picasso.with(context).load(urlAvartar).into(holder.ivAvartar);
 
-        }
+        holder.showMessage.setOnClickListener(v -> {
+            if (holder.tvTime.getVisibility()== View.VISIBLE){
+                holder.tvTime.setVisibility(View.GONE);
+
+            }else {
+                holder.tvTime.setText(chat.getTime());
+                holder.tvTime.setVisibility(View.VISIBLE);
+
+            }
+        });
+
         if (position == chatList.size() - 1) {
             if (chat.getIsSeen().equals("true")) {
-                holder.tvSeen.setText("Đã xem");
+                holder.tvSeen.setText("Seen");
 
-            } else if (chat.getIsSeen().equals("false")){
-                holder.tvSeen.setText("Đã gửi");
+            } else if (chat.getIsSeen().equals("false")) {
+                holder.tvSeen.setText("Delivered");
             }
-        }else {
+        } else {
             holder.tvSeen.setVisibility(View.GONE);
         }
     }
@@ -74,7 +83,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView showMessage, tvSeen;
+        public TextView showMessage, tvSeen, tvTime;
         public ImageView ivAvartar;
 
         public MessageViewHolder(@NonNull View itemView) {
@@ -82,6 +91,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             showMessage = itemView.findViewById(R.id.tv_message);
             ivAvartar = itemView.findViewById(R.id.iv_avartar);
             tvSeen = itemView.findViewById(R.id.tv_seen);
+            tvTime = itemView.findViewById(R.id.tv_time);
 
         }
     }

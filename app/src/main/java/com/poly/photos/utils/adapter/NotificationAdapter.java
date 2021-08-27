@@ -1,6 +1,7 @@
 package com.poly.photos.utils.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import com.poly.photos.model.Notification;
 import com.poly.photos.model.Post;
 import com.poly.photos.model.User;
 import com.poly.photos.view.activity.LoginActivity;
+import com.poly.photos.view.activity.PostDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -88,10 +90,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             } else {
 
-                SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
-                editor.putString("postId", notification.getPostId());
-                editor.apply();
-                Navigation.createNavigateOnClickListener(R.id.action_detail_post).onClick(holder.itemView);
+                Intent intent= new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId",notification.getPostId());
+                context.startActivity(intent);
 
             }
 

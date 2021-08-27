@@ -80,13 +80,7 @@
         tools:layout="@layout/fragment_notification">
 
     </fragment>
-    <fragment
-        android:id="@+id/action_detail_post"
-        android:name="com.poly.photos.view.fragment.PostDetailFragment"
-        android:label="fragment_post_detail"
-        tools:layout="@layout/fragment_post_detail">
 
-    </fragment>
     <fragment
         android:id="@+id/action_search"
         android:name="com.poly.photos.view.fragment.SearchFragment"

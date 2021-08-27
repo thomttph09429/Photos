@@ -31,6 +31,7 @@ import com.poly.photos.R;
 import com.poly.photos.model.Post;
 import com.poly.photos.model.User;
 import com.poly.photos.view.activity.CommentActivity;
+import com.poly.photos.view.activity.PostDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -64,6 +65,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
     public void onBindViewHolder(@NonNull PostAdapter.PostViewholder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final Post post = postList.get(position);
+        holder.tv_time.setText(post.getTime());
         if (post.getDescription().equals("")) {
             holder.tvState.setVisibility(View.GONE);
         } else {
@@ -87,12 +89,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         });
 
         holder.ivPhoto.setOnClickListener(v -> {
-
-            SharedPreferences.Editor editor = context.getSharedPreferences("name", MODE_PRIVATE).edit();
-            editor.putString("postId", post.getPostid());
-            editor.putString("publisherId", post.getPublisher());
-            editor.apply();
-            Navigation.createNavigateOnClickListener(R.id.action_detail_post).onClick(holder.ivPhoto);
+            Intent intent= new Intent(context, PostDetailActivity.class);
+            intent.putExtra("postId",post.getPostid());
+            intent.putExtra("publisherId", post.getPublisher());
+            context.startActivity(intent);
 
         });
 
@@ -201,7 +201,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
     }
 
     public class PostViewholder extends RecyclerView.ViewHolder {
-        TextView tvState, tvUserName, tv_like, tv_comment, tv_care;
+        TextView tvState, tvUserName, tv_like, tv_comment, tv_care,tv_time;
         ImageView ivPhoto, iv_like, iv_comment, iv_share, iv_care;
         LinearLayout lSelect;
         CircleImageView ivAvartar;
@@ -220,6 +220,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             tv_comment = itemView.findViewById(R.id.tv_comment);
             iv_share = itemView.findViewById(R.id.iv_more);
             lSelect = itemView.findViewById(R.id.select);
+            tv_time = itemView.findViewById(R.id.tv_time);
+
 
         }
     }
