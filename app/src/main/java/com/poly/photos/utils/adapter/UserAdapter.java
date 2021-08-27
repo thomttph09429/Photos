@@ -60,7 +60,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
         final User user = userList.get(position);
 
         holder.tvName.setText(user.getName());
-        Picasso.with(context).load(user.getAvartar()).placeholder(R.drawable.portrait).into(holder.ivAvartar);
+        Picasso.with(context).load(user.getAvartar()).into(holder.ivAvartar);
 
 
         holder.btnFollow.setVisibility(View.VISIBLE);
@@ -74,9 +74,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewholder
                     .child("Follows").child(firebaseUser.getUid()).setValue(true);
         }
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, MessageActivity.class);
-            intent.putExtra("userId", user.getId());
-            context.startActivity(intent);
+
+            if (!user.getId().equals(firebaseUser.getUid())){
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("userId", user.getId());
+                context.startActivity(intent);
+            }
 
         });
         holder.ivAvartar.setOnClickListener(v -> {

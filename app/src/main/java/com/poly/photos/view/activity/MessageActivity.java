@@ -120,7 +120,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         rvMessage.setHasFixedSize(true);
         rvMessage.setLayoutManager(layoutManager);
 
-//        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+        databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
 
     }
@@ -147,7 +147,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void seenMessage(final String userId) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+         databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
         seenListener = databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -332,12 +332,8 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         currentUser("none");
+        databaseReference.removeEventListener(seenListener);
+
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(MessageActivity.this, ListChatActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        finish();
-    }
 }

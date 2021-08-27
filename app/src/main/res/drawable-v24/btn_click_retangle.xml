@@ -7,7 +7,7 @@
 
     <solid
 
-        android:color="@color/clear" />
+        android:color="@color/background_4" />
 
     <stroke
         android:color="@android:color/transparent"

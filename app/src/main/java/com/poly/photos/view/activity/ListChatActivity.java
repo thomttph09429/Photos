@@ -133,23 +133,5 @@ public class ListChatActivity extends AppCompatActivity {
             }
         });
     }
-    private void status(String status) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.getUid());
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("status", status);
-        reference.updateChildren(hashMap);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        status("online");
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        finish();
-    }
 }
