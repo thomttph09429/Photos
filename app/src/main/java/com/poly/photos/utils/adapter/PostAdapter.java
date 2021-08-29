@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -76,10 +77,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         Picasso.with(context).load(post.getPostimage()).fit().centerCrop().into(holder.ivPhoto);
 
         publisherInfor(holder.ivAvartar, holder.tvUserName, post.getPublisher());
+        getAvartar(holder.ivAvtComment);
 
 //       Navigation.createNavigateOnClickListener(R.id.action_home_to_action_comment).onClick(holder.iv_comment);
 //        Navigation.findNavController(view).navigate(R.id.action_home_to_action_comment, bundle);
-
+        holder.ivAvtComment.setOnClickListener(v ->
+        {
+            Intent intent = new Intent(context, CommentActivity.class);
+            intent.putExtra("postId", post.getPostid());
+            intent.putExtra("publisherId", post.getPublisher());
+            context.startActivity(intent);
+        });
+        holder.btnComment.setOnClickListener(v ->
+        {
+            Intent intent = new Intent(context, CommentActivity.class);
+            intent.putExtra("postId", post.getPostid());
+            intent.putExtra("publisherId", post.getPublisher());
+            context.startActivity(intent);
+        });
         holder.iv_comment.setOnClickListener(v ->
         {
             Intent intent = new Intent(context, CommentActivity.class);
@@ -163,7 +178,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         getComment(post.getPostid(), holder.iv_comment);
 
         nComment(holder.tv_comment, post.getPostid());
-        isLikes(post.getPostid(), holder.iv_like);
+        isLikes(post.getPostid(), holder.iv_like, holder.boxComment);
         nLike(holder.tv_like, post.getPostid());
         holder.iv_like.setOnClickListener(v -> {
             if (holder.iv_like.getTag().equals("like")) {
@@ -177,7 +192,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
         });
 
-        isCare(post.getPostid(), holder.iv_care);
+        isCare(post.getPostid(), holder.iv_care,holder.boxComment);
         nCare(holder.tv_care, post.getPostid());
         holder.iv_care.setOnClickListener(v -> {
             if (holder.iv_care.getTag().equals("care")) {
@@ -204,7 +219,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
         TextView tvState, tvUserName, tv_like, tv_comment, tv_care,tv_time;
         ImageView ivPhoto, iv_like, iv_comment, iv_share, iv_care;
         LinearLayout lSelect;
-        CircleImageView ivAvartar;
+        CircleImageView ivAvartar, ivAvtComment;
+        LinearLayout boxComment;
+        Button btnComment;
 
         public PostViewholder(View itemView) {
             super(itemView);
@@ -221,7 +238,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             iv_share = itemView.findViewById(R.id.iv_more);
             lSelect = itemView.findViewById(R.id.select);
             tv_time = itemView.findViewById(R.id.tv_time);
-
+            boxComment=itemView.findViewById(R.id.box_comment);
+            ivAvtComment=itemView.findViewById(R.id.iv_avt_comment);
+            btnComment=itemView.findViewById(R.id.btn_comment);
 
         }
     }
@@ -270,7 +289,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
     }
 
-    private void isLikes(String postId, ImageView imageView) {
+    private void isLikes(String postId, ImageView imageView, LinearLayout boxComment) {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Likes").child(postId);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -279,9 +298,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
                 if (snapshot.child(firebaseUser.getUid()).exists()) {
                     imageView.setImageResource(R.drawable.ic_love_love);
                     imageView.setTag("liked");
+                    boxComment.setVisibility(View.VISIBLE);
+
                 } else {
                     imageView.setImageResource(R.drawable.ic_love);
                     imageView.setTag("like");
+                    boxComment.setVisibility(View.GONE);
+
                 }
             }
 
@@ -327,7 +350,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
 
     }
 
-    private void isCare(String postId, ImageView imageView) {
+    private void isCare(String postId, ImageView imageView, LinearLayout boxComment) {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Cares").child(postId);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -336,9 +359,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
                 if (snapshot.child(firebaseUser.getUid()).exists()) {
                     imageView.setImageResource(R.drawable.ic_care_care);
                     imageView.setTag("cared");
+                    boxComment.setVisibility(View.VISIBLE);
                 } else {
                     imageView.setImageResource(R.drawable.ic_care);
                     imageView.setTag("care");
+                    boxComment.setVisibility(View.GONE);
+
                 }
             }
 
@@ -408,4 +434,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewholder
             reference.push().setValue(hashMap);
         }
     }
-}
+    private void getAvartar(ImageView ivAvartarComment) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(firebaseUser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                Picasso.with(context).load(user.getAvartar()).into(ivAvartarComment);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }}

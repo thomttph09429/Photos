@@ -53,7 +53,9 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
         final User user = userList.get(position);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         checkLastMsg(user.getId(), holder.tvLastMsg);
-        isSeen(holder.tvUserName, holder.tvLastMsg);
+        isSeen(holder.tvUserName, holder.tvLastMsg, holder.ivSeen, holder.ivDelivered);
+        Picasso.with(context).load(user.getAvartar()).into(holder.ivSeen);
+
 
         holder.tvUserName.setText(user.getName());
 
@@ -77,21 +79,39 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
         });
     }
 
-    private void isSeen(TextView tvUsername, TextView tvLastMessage) {
+    private void isSeen(TextView tvUsername, TextView tvLastMessage, CircleImageView seen, CircleImageView delivered) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Chat chat = dataSnapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getIsSeen().equals("true") ||
-                            chat.getSender().equals(firebaseUser.getUid()) && chat.getIsSeen().equals("true")
-                    ) {
-                        tvUsername.setTextColor(context.getResources().getColor(R.color.background_8));
-                        tvLastMessage.setTextColor(context.getResources().getColor(R.color.background_8));
-                    }else {
-                        tvUsername.setTextColor(context.getResources().getColor(R.color.white));
-                        tvLastMessage.setTextColor(context.getResources().getColor(R.color.white));
+                    if (chat.getReceiver().equals(firebaseUser.getUid())) {
+                        if (chat.getIsSeen().equals("true")) {
+                            seen.setVisibility(View.GONE);
+                            delivered.setVisibility(View.GONE);
+                            tvUsername.setTextColor(context.getResources().getColor(R.color.background_8));
+                            tvLastMessage.setTextColor(context.getResources().getColor(R.color.background_8));
+                        }else {
+                            seen.setVisibility(View.GONE);
+                            delivered.setVisibility(View.GONE);
+                            tvUsername.setTextColor(context.getResources().getColor(R.color.white));
+                            tvLastMessage.setTextColor(context.getResources().getColor(R.color.white));
+                        }
+
+                    } else if (chat.getSender().equals(firebaseUser.getUid())) {
+                        if (chat.getIsSeen().equals("true")) {
+                            seen.setVisibility(View.VISIBLE);
+                            delivered.setVisibility(View.GONE);
+                            tvUsername.setTextColor(context.getResources().getColor(R.color.background_8));
+                            tvLastMessage.setTextColor(context.getResources().getColor(R.color.background_8));
+                        } else {
+                            seen.setVisibility(View.GONE);
+                            delivered.setVisibility(View.VISIBLE);
+                            tvUsername.setTextColor(context.getResources().getColor(R.color.background_8));
+                            tvLastMessage.setTextColor(context.getResources().getColor(R.color.background_8));
+                        }
+
                     }
                 }
             }
@@ -143,8 +163,9 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
     }
 
     public class ChatUserViewholder extends RecyclerView.ViewHolder {
-        CircleImageView ivAvartar, ivOnline, ivOffline;
+        CircleImageView ivAvartar, ivOnline, ivOffline, ivSeen, ivDelivered;
         TextView tvUserName, tvLastMsg;
+
 
         public ChatUserViewholder(@NonNull View itemView) {
             super(itemView);
@@ -153,7 +174,8 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUs
             ivOnline = itemView.findViewById(R.id.iv_online);
             ivOffline = itemView.findViewById(R.id.iv_offline);
             tvLastMsg = itemView.findViewById(R.id.tv_last_message);
-
+            ivSeen = itemView.findViewById(R.id.iv_seen);
+            ivDelivered = itemView.findViewById(R.id.iv_devlivered);
         }
     }
 }

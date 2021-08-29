@@ -71,8 +71,9 @@
                 android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/arial_bold"
+                android:fontFamily="@font/futuramedium"
                 android:gravity="center"
+                android:textSize="18sp"
                 android:text="Trương ngọc Thơm" />
 
             <ImageButton

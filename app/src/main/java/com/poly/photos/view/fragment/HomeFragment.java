@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,9 +34,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.poly.photos.R;
+import com.poly.photos.model.Story;
 import com.poly.photos.model.User;
 import com.poly.photos.utils.adapter.PostAdapter;
 import com.poly.photos.model.Post;
+import com.poly.photos.utils.adapter.StoryAdapter;
+import com.poly.photos.view.activity.AddStoryActivity;
 import com.poly.photos.view.activity.MessageActivity;
 import com.poly.photos.view.dialog.PostDialog;
 import com.squareup.picasso.Picasso;
@@ -56,8 +60,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private List<Post> postList;
     private List<String> followingList;
     private ShimmerFrameLayout shimmerFrameLayout;
-    private CircleImageView ivAvartar;
+    private CircleImageView ivAvartar, ivAvartarStory;
     private Button btnPost;
+    private LinearLayout createStory;
+    private List<Story> storyList;
+    private StoryAdapter storyAdapter;
+    private  RecyclerView rvStory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,8 +101,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
         btnPost.setOnClickListener(this);
+        createStory.setOnClickListener(this);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+        //recycleview_story
+        storyList= new ArrayList<>();
+        LinearLayoutManager layoutStory = new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false);
+        rvStory.setLayoutManager(layoutStory);
+        rvStory.setHasFixedSize(true);
+        storyAdapter = new StoryAdapter(getContext(), storyList);
+        rvStory.setAdapter(storyAdapter);
+
 
     }
 
@@ -103,8 +121,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerView = view.findViewById(R.id.rv_post);
         shimmerFrameLayout = view.findViewById(R.id.shimmerFrameLayout);
         btnPost = view.findViewById(R.id.btn_post);
-        ivAvartar=view.findViewById(R.id.iv_avartar);
-
+        ivAvartar = view.findViewById(R.id.iv_avartar);
+        createStory = view.findViewById(R.id.llcreate_story);
+        ivAvartarStory = view.findViewById(R.id.iv_avartar_story);
+        rvStory = view.findViewById(R.id.rv_story);
     }
 
     private void getAvartar() {
@@ -114,9 +134,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                    Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
-
-
+                Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartar);
+                Picasso.with(getContext()).load(user.getAvartar()).into(ivAvartarStory);
 
 
             }
@@ -173,10 +192,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                followingList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     followingList.add(dataSnapshot.getKey());
                 }
                 showPost();
+                readStory();
 
             }
 
@@ -187,13 +208,52 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
 
     }
+    private void readStory(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long timecurrent = System.currentTimeMillis();
+                storyList.clear();
+                storyList.add(new Story("", 0, 0, "",
+                        FirebaseAuth.getInstance().getCurrentUser().getUid()));
+                for (String id : followingList) {
+                    int countStory = 0;
+                    Story story = null;
+                    for (DataSnapshot snapshot : dataSnapshot.child(id).getChildren()) {
+                        story = snapshot.getValue(Story.class);
+                        storyList.add(story);
 
+                        if (timecurrent > story.getTimeStart() && timecurrent < story.getTimeEnd()) {
+                            countStory++;
+                        }
+                    }
+//                    if (countStory > 0){
+//                        storyList.add(story);
+//                    }
+                }
+
+                storyAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_post:
                 PostDialog post = new PostDialog();
                 post.show(getFragmentManager(), "dialog");
+
+                break;
+            case R.id.llcreate_story:
+                Intent intent=new Intent(getContext(), AddStoryActivity.class);
+                startActivity(intent);
+
 
                 break;
             default:

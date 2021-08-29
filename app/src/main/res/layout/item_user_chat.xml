@@ -28,7 +28,7 @@
         android:gravity="center"
         android:textSize="14dp"
         android:background="@android:color/transparent"
-        android:text="truong ngoc thom " />
+        android:text="thom " />
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -60,7 +60,7 @@
         android:layout_toRightOf="@id/iv_avartar"
         android:layout_toEndOf="@id/iv_avartar"/>
     <TextView
-        android:text="hom quaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        android:text="hom "
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_name"
@@ -70,5 +70,33 @@
         android:layout_marginLeft="10dp"
         android:background="@android:color/transparent"
         android:maxLines="1"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_seen"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_toEndOf="@+id/iv_avartar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="200dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/iv_avartar"
+        />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_devlivered"
+        android:visibility="visible"
+        android:background="@android:color/transparent"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_toEndOf="@+id/iv_avartar"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_check"
+        android:layout_marginLeft="200dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/iv_avartar" />
+
 
 </RelativeLayout>
